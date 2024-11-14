@@ -4,4 +4,15 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="splash_screen_with_logo">Splash Screen with Logo</string>
+    <string name="login_account">Login Akun</string>
+    <string name="number_phone">Nomor HP</string>
+    <string name="input_number_phone">Masukan Nomor HP</string>
+    <string name="password">Password</string>
+    <string name="input_password">Masukan Password</string>
+    <string name="forgot_password">Lupa Passowrd?</string>
+    <string name="login">Masuk</string>
+    <string name="or">atau</string>
+    <string name="login_with_google">Masuk dengan Google</string>
+    <string name="dont_have_a_account">Belum Punya Akun?</string>
+    <string name="register_now">Daftar Sekarang</string>
 </resources>

@@ -7,10 +7,9 @@ import android.os.Handler
 import android.os.Looper
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.rasadhana.MainActivity
 import com.rasadhana.R
+import com.rasadhana.ui.login.LoginActivity
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : AppCompatActivity() {
@@ -18,16 +17,21 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_splash_screen)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
         supportActionBar?.hide()
 
+//        TODO
+//        logic user udah login apa belum
+        if (true) {
+            moveTo(LoginActivity::class.java)
+        } else {
+            moveTo(MainActivity::class.java)
+        }
+    }
+
+    private fun moveTo(cls: Class<*>) {
         Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, cls)
             startActivity(intent)
             finish()
         }, 2000)
