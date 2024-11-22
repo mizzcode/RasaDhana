@@ -12,14 +12,25 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.rasadhana.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_favorite"
+        android:name="com.rasadhana.ui.favorite.FavoriteFragment"
+        android:label="@string/title_favorite"
+        tools:layout="@layout/fragment_favorite" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.rasadhana.ui.notifications.NotificationsFragment"
+        android:id="@+id/navigation_camera"
+        android:name="com.rasadhana.ui.camera.IngredientFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_ingredient" />
+
+    <fragment
+        android:id="@+id/navigation_kulkas"
+        android:name="com.rasadhana.ui.kulkas.KulkasFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_kulkas" />
+    <fragment
+        android:id="@+id/navigation_account"
+        android:name="com.rasadhana.ui.account.AccountFragment"
+        android:label="@string/title_account"
+        tools:layout="@layout/fragment_account" />
 </navigation>
