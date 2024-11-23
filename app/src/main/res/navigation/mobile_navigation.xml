@@ -18,10 +18,14 @@
         tools:layout="@layout/fragment_favorite" />
 
     <fragment
-        android:id="@+id/navigation_camera"
-        android:name="com.rasadhana.ui.camera.IngredientFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_ingredient" />
+        android:id="@+id/navigation_photo"
+        android:name="com.rasadhana.ui.photo.PhotoFragment"
+        android:label="@string/title_photo"
+        tools:layout="@layout/fragment_photo" >
+        <action
+            android:id="@+id/action_navigation_photo_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_kulkas"

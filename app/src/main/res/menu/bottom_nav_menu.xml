@@ -12,7 +12,7 @@
         android:title="@string/title_favorite" />
 
     <item
-        android:id="@+id/navigation_camera"
+        android:id="@+id/navigation_photo"
         android:icon="@drawable/baseline_camera_enhance_24"
         android:title="@string/title_camera" />
 
