@@ -1,11 +1,14 @@
 package com.rasadhana.ui.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.rasadhana.MainActivity
 import com.rasadhana.databinding.ActivityLoginBinding
+import com.rasadhana.ui.register.RegisterActivity
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -23,11 +26,22 @@ class LoginActivity : AppCompatActivity() {
 
 //        sementara
         binding.btnLogin.setOnClickListener {
-            loginViewModel.numberPhone.value = binding.tfNumberPhone.editText?.text.toString()
+            loginViewModel.numberPhone.value = binding.tfEmail.editText?.text.toString()
             loginViewModel.password.value = binding.tfPassword.editText?.text.toString()
 
-            Toast.makeText(this@LoginActivity, "berhasil login dengan nomor ${loginViewModel.numberPhone.value}", Toast.LENGTH_SHORT).show()
+            if (loginViewModel.numberPhone.value.isNullOrEmpty() || loginViewModel.password.value.isNullOrEmpty()) {
+                Toast.makeText(this, "Tolong isi email atau password yang kosong", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
         }
 
+        binding.tvRegisterNow.setOnClickListener {
+            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
