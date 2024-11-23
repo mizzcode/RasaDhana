@@ -65,7 +65,7 @@
             android:id="@+id/tf_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:startIconDrawable="@drawable/baseline_email_24"
+            app:startIconDrawable="@drawable/baseline_account_box_24"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="10dp"
@@ -76,7 +76,7 @@
                 android:hint="@string/input_name"
                 android:paddingStart="50dp"
                 android:paddingEnd="0dp"
-                android:inputType="number"
+                android:inputType="text"
                 android:layout_height="wrap_content"
                 />
 
@@ -110,7 +110,7 @@
                 android:hint="@string/input_email"
                 android:paddingStart="50dp"
                 android:paddingEnd="0dp"
-                android:inputType="number"
+                android:inputType="textEmailAddress"
                 android:layout_height="wrap_content"
                 />
 
@@ -158,7 +158,7 @@
             android:text="@string/register"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:paddingVertical="14dp"
+            android:paddingVertical="11dp"
             android:layout_marginTop="30dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
