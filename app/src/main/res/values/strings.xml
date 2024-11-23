@@ -16,6 +16,7 @@
     <string name="register_now">Daftar Sekarang</string>
     <string name="register_account">Register</string>
     <string name="register">Register</string>
+    <string name="sent">Kirim</string>
     <string name="enter_your_personal_information">Enter your personal information</string>
     <string name="email">Email</string>
     <string name="input_email">Masukkan Email</string>
@@ -33,4 +34,7 @@
     <string name="generate_recipes">Generate Recipes</string>
     <string name="photo_ingredient">Foto Bahan</string>
     <string name="title_photo">Photo</string>
+    <string name="insert_otp">Masukkan OTP</string>
+    <string name="insert_otp_from_email">Masukkan kode OTP yang kami kirim melalui email anda yang terdaftar</string>
+    <string name="we_sent_otp_to_your_email">Kami sudah mengirimkan kode OTP pada %s cek kontak masuk anda</string>
 </resources>
