@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MyOutlinedButton" parent="Widget.Material3.Button.OutlinedButton.Icon">
+        <item name="iconTint">@null</item>
+    </style>
+</resources>

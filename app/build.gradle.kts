@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.rasadhana"
         minSdk = 21
-        targetSdk = 34
+        this.targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -56,6 +56,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.fragment.ktx)
     testImplementation(libs.junit)
     implementation(libs.androidx.activity)
     androidTestImplementation(libs.androidx.junit)
@@ -84,4 +86,16 @@ dependencies {
 
 //    work manager
     implementation(libs.androidx.work.runtime.ktx)
+
+    // Import the Firebase BoM
+    implementation(platform(libs.firebase.bom))
+
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation(libs.firebase.analytics)
+
+    // Add the dependencies for any other desired Firebase products
+    // https://firebase.google.com/docs/android/setup#available-libraries
+
+    // otpview
+    implementation (libs.otpview)
 }
