@@ -23,6 +23,12 @@
         android:theme="@style/Theme.RasaDhana"
         tools:targetApi="31">
         <activity
+            android:name=".ui.forgotpassword.CreateNewPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.forgotpassword.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.otp.OtpActivity"
             android:exported="false" />
         <activity
