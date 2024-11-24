@@ -5,10 +5,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.rasadhana.MainActivity
 import com.rasadhana.databinding.ActivityLoginBinding
+import com.rasadhana.ui.forgotpassword.ForgotPasswordActivity
 import com.rasadhana.ui.register.RegisterActivity
+import org.koin.android.ext.android.inject
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -21,8 +22,12 @@ class LoginActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        val loginViewModel =
-            ViewModelProvider(this)[LoginViewModel::class.java]
+        val loginViewModel: LoginViewModel by inject()
+
+        binding.tvForgotPassword.setOnClickListener {
+            val intent = Intent(this@LoginActivity, ForgotPasswordActivity::class.java)
+            startActivity(intent)
+        }
 
 //        sementara
         binding.btnLogin.setOnClickListener {
