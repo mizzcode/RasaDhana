@@ -5,6 +5,8 @@ import com.rasadhana.data.pref.dataStore
 import com.rasadhana.data.remote.retrofit.ApiConfig
 import com.rasadhana.data.repository.RecipeRepository
 import com.rasadhana.data.repository.UserRepository
+import com.rasadhana.ui.forgotpassword.CreateNewPasswordViewModel
+import com.rasadhana.ui.forgotpassword.ForgotPasswordViewModel
 import com.rasadhana.ui.home.HomeViewModel
 import com.rasadhana.ui.login.LoginViewModel
 import com.rasadhana.ui.main.MainViewModel
@@ -28,4 +30,6 @@ val appModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { MainViewModel(get()) }
     viewModel { SplashViewModel(get()) }
+    viewModel { ForgotPasswordViewModel(get()) }
+    viewModel { CreateNewPasswordViewModel(get()) }
 }

@@ -22,33 +22,29 @@ class OtpActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        val email = intent.getStringExtra(EXTRA_EMAIL) ?: ""
+        val email = intent.getStringExtra(EXTRA_EMAIL)
 
-        val message = if (email.isNotEmpty()) {
-            getString(R.string.we_sent_otp_to_your_email, email)
-        } else {
-            getString(R.string.we_sent_otp_to_your_email, "email@gmail.com")
-        }
+        val message = getString(R.string.we_sent_otp_to_your_email, email)
 
         val type = intent.getStringExtra(EXTRA_TYPE)
+        val otpFromServer = intent.getStringExtra(EXTRA_OTP)
 
         binding.tvSentOtp.text = message
-
         binding.btnSent.isEnabled = false
 
         binding.otpView.setOtpCompletionListener {
-            val otp = it
+            val currentOtp = it
 
-            binding.btnSent.isEnabled = otp.length == 5
+            binding.btnSent.isEnabled = currentOtp.length == 5
 
             binding.btnSent.setOnClickListener {
-                Log.d("OTP_CODE", "OTP: $otp")
+                Log.d("OTP_CODE", "OTP: $currentOtp")
 
-                // TODO logic pencocokan otp pada server
-                if (otp.isNotEmpty()) {
+                if (currentOtp == otpFromServer) {
                     when (type) {
                         FORGOT_PASSWORD -> {
                             val intent = Intent(this@OtpActivity, CreateNewPasswordActivity::class.java)
+                            intent.putExtra(EXTRA_OTP, currentOtp)
                             startActivity(intent)
                         }
                         else -> {
@@ -63,9 +59,9 @@ class OtpActivity : AppCompatActivity() {
         }
 
         binding.otpView.addTextChangedListener {
-            val otp = it
+            val currentOtp = it
 
-            binding.btnSent.isEnabled = otp?.length == 5
+            binding.btnSent.isEnabled = currentOtp?.length == 5
         }
     }
 
@@ -76,6 +72,7 @@ class OtpActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_EMAIL = "extra_email"
         const val EXTRA_TYPE = "extra_type"
+        const val EXTRA_OTP = "extra_otp"
         const val FORGOT_PASSWORD = "forgot_password"
     }
 }

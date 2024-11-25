@@ -1,7 +1,9 @@
 package com.rasadhana.data.remote.retrofit
 
 import com.rasadhana.data.remote.response.LoginResponse
+import com.rasadhana.data.remote.response.OtpResponse
 import com.rasadhana.data.remote.response.RegisterResponse
+import com.rasadhana.data.remote.response.ResetPasswordResponse
 import com.rasadhana.data.remote.response.UserDataResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -25,7 +27,20 @@ interface ApiService {
     ) : LoginResponse
 
     @POST("auth/userdata")
-    suspend fun findOneUser(
+    suspend fun getUserData(
         @Header("Authorization") token: String
     ) : UserDataResponse
+
+    @FormUrlEncoded
+    @POST("auth/forgot-password")
+    suspend fun getOtp(
+        @Field("email") email: String
+    ) : OtpResponse
+
+    @FormUrlEncoded
+    @POST("auth/reset-password")
+    suspend fun updatePassword(
+        @Field("otp") otp: String,
+        @Field("newPassword") newPassword: String
+    ) : ResetPasswordResponse
 }

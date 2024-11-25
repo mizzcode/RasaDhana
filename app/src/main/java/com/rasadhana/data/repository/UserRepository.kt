@@ -37,11 +37,37 @@ class UserRepository(private val apiService: ApiService, private val userPrefere
         }
     }
 
-    fun findOneUser(token: String) = liveData {
+    fun getUserData(token: String) = liveData {
         emit(Result.Loading)
 
         try {
-            val response = apiService.findOneUser("Bearer $token")
+            val response = apiService.getUserData("Bearer $token")
+            emit(Result.Success(response))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, RegisterResponse::class.java)
+            emit(Result.Error(errorResponse.message))
+        }
+    }
+
+    fun getOtp(email: String) = liveData {
+        emit(Result.Loading)
+
+        try {
+            val response = apiService.getOtp(email)
+            emit(Result.Success(response))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, RegisterResponse::class.java)
+            emit(Result.Error(errorResponse.message))
+        }
+    }
+
+    fun updatePassword(otp: String, newPassword: String) = liveData {
+        emit(Result.Loading)
+
+        try {
+            val response = apiService.updatePassword(otp, newPassword)
             emit(Result.Success(response))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
