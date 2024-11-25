@@ -16,7 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
-import com.rasadhana.MainActivity
+import com.rasadhana.ui.main.MainActivity
 import com.rasadhana.R
 import com.rasadhana.databinding.FragmentPhotoBinding
 import com.rasadhana.getImageUri

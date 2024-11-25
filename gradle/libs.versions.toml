@@ -1,5 +1,7 @@
 [versions]
+activityKtx = "1.9.3"
 agp = "8.7.2"
+datastorePreferences = "1.1.1"
 firebaseBom = "33.6.0"
 kotlin = "1.9.24"
 coreKtx = "1.15.0"
@@ -23,13 +25,14 @@ kotlinxCoroutinesAndroid = "1.7.3"
 kotlinxCoroutinesCore = "1.7.3"
 loggingInterceptor = "4.12.0"
 converterGson = "2.11.0"
-activity = "1.9.3"
 glide = "4.16.0"
 legacySupportV4 = "1.0.0"
 fragmentKtx = "1.8.5"
 
 [libraries]
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -44,7 +47,6 @@ androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navi
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 otpview = { module = "com.github.mukeshsolanki.android-otpview-pinview:otpview", version.ref = "otpview" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterGson" }
-androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }

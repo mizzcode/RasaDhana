@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import com.rasadhana.MainActivity
 import com.rasadhana.R
 import com.rasadhana.databinding.ActivityOtpBinding
 import com.rasadhana.ui.forgotpassword.CreateNewPasswordActivity
@@ -48,15 +47,6 @@ class OtpActivity : AppCompatActivity() {
                 // TODO logic pencocokan otp pada server
                 if (otp.isNotEmpty()) {
                     when (type) {
-                        REGISTER -> {
-                            val fullName = intent.getStringExtra(EXTRA_NAME) ?: "Pengguna"
-
-                            val intent = Intent(this@OtpActivity, MainActivity::class.java)
-                            intent.putExtra(EXTRA_NAME, fullName)
-
-                            showToast("Berhasil Daftar")
-                            startActivity(intent)
-                        }
                         FORGOT_PASSWORD -> {
                             val intent = Intent(this@OtpActivity, CreateNewPasswordActivity::class.java)
                             startActivity(intent)
@@ -84,10 +74,8 @@ class OtpActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val EXTRA_NAME = "extra_name"
         const val EXTRA_EMAIL = "extra_email"
         const val EXTRA_TYPE = "extra_type"
-        const val REGISTER = "register"
         const val FORGOT_PASSWORD = "forgot_password"
     }
 }
