@@ -37,6 +37,19 @@ class UserRepository(private val apiService: ApiService, private val userPrefere
         }
     }
 
+    fun findOneUser(token: String) = liveData {
+        emit(Result.Loading)
+
+        try {
+            val response = apiService.findOneUser("Bearer $token")
+            emit(Result.Success(response))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, RegisterResponse::class.java)
+            emit(Result.Error(errorResponse.message))
+        }
+    }
+
     suspend fun saveSession(user: UserModel) {
         userPreference.saveSession(user)
     }

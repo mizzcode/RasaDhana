@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.rasadhana.databinding.FragmentHomeBinding
+import com.rasadhana.ui.main.MainActivity
 import org.koin.android.ext.android.inject
 
 class HomeFragment : Fragment() {
@@ -24,6 +25,8 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        (requireActivity() as MainActivity).supportActionBar?.hide()
+
         return root
     }
 
@@ -32,10 +35,12 @@ class HomeFragment : Fragment() {
 
         val homeViewModel: HomeViewModel by inject()
 
+        // TODO
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        (requireActivity() as MainActivity).supportActionBar?.show()
     }
 }
