@@ -48,4 +48,7 @@
     <string name="input_new_password">Masukkan Password Baru</string>
     <string name="input_confirm_new_password">Konfirmasi Password Baru</string>
     <string name="reset_password">Reset Password</string>
+    <string name="confirm_password">Konfirmasi Password</string>
+    <string name="input_confirm_password">Masukkan Konfirmasi Password</string>
+    <string name="greeting">Hai %s,\nMau Masak Menu apa hari ini?</string>
 </resources>
