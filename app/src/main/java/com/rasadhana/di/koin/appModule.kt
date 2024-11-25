@@ -25,7 +25,7 @@ val appModule = module {
     viewModel { PhotoViewModel() }
     viewModel { LoginViewModel(get()) }
     viewModel { RegisterViewModel(get()) }
-    viewModel { HomeViewModel() }
+    viewModel { HomeViewModel(get()) }
     viewModel { MainViewModel(get()) }
     viewModel { SplashViewModel(get()) }
 }
