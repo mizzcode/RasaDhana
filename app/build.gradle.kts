@@ -71,7 +71,7 @@ dependencies {
     implementation (libs.converter.gson)
 //    image load
     implementation (libs.glide)
-    kapt(libs.glideCompiler)
+    ksp(libs.glideCompiler)
 //    room orm
     implementation(libs.androidx.room.runtime)
     ksp(libs.room.compiler)

@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.rasadhana.GlideApp
 import com.rasadhana.R
 import com.rasadhana.data.local.entity.RecipeEntity
 import com.rasadhana.databinding.ItemColRecipeMaybeYouLikeItBinding
@@ -30,7 +30,7 @@ class RecipeSuggestionAdapter : ListAdapter<RecipeEntity, RecipeSuggestionAdapte
         fun bind(recipe: RecipeEntity) {
             Log.d("RecipeSuggestionAdapter", "Binding recipe: ${recipe.name} | Gambar: ${recipe.image}")
             binding.tvNameRecipe.text = recipe.name
-            GlideApp.with(itemView.context)
+            Glide.with(itemView.context)
                 .load(recipe.image)
                 .diskCacheStrategy(DiskCacheStrategy.ALL) // Menyimpan gambar di disk cache
                 .error(R.drawable.ic_place_holder)
