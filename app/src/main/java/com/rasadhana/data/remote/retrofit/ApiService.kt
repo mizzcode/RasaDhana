@@ -5,11 +5,14 @@ import com.rasadhana.data.remote.response.OtpResponse
 import com.rasadhana.data.remote.response.RegisterResponse
 import com.rasadhana.data.remote.response.ResetPasswordResponse
 import com.rasadhana.data.remote.response.UserDataResponse
+import okhttp3.MultipartBody
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 
 interface ApiService {
     @FormUrlEncoded
@@ -44,4 +47,12 @@ interface ApiService {
         @Field("otp") otp: String,
         @Field("newPassword") newPassword: String
     ) : ResetPasswordResponse
+
+//    @Multipart
+//    @POST("photos/upload-photo")
+//    suspend fun uploadImage(
+//        @Header("Authorization") token: String,
+//        @Part photo: MultipartBody.Part,
+//        @Part userId: String
+//    ) : FileUploadResponse
 }

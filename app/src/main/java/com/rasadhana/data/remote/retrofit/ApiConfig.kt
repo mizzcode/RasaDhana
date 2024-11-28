@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiConfig {
     companion object {
-        fun getApiService() : ApiService {
+        private fun createRetrofit(baseUrl: String): Retrofit {
             val loggingInterceptor = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
             } else {
@@ -17,13 +17,20 @@ class ApiConfig {
             val client = OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
                 .build()
-            val retrofit = Retrofit.Builder()
-                .baseUrl(BuildConfig.BASE_URL)
+
+            return Retrofit.Builder()
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()
+        }
 
-            return retrofit.create(ApiService::class.java)
+        fun getApiService(): ApiService {
+            return createRetrofit(BuildConfig.BASE_URL).create(ApiService::class.java)
+        }
+
+        fun getDummyApiService(): DummyApiService {
+            return createRetrofit("https://opensheet.elk.sh/1qZ3Uh8MGoAUV0LWnCHw5gHhrhsZihh4QqCXBBEiumjI/").create(DummyApiService::class.java)
         }
     }
 }

@@ -8,26 +8,29 @@ data class UserDataResponse(
 	val data: Data,
 
 	@field:SerializedName("success")
-	val success: Boolean
+	val success: Boolean,
+
+	@field:SerializedName("message")
+	val message: String
 )
 
 data class Data(
 
 	@field:SerializedName("password")
-	val password: String? = null,
+	val password: String,
 
 	@field:SerializedName("__v")
-	val v: Int? = null,
+	val v: Int,
 
 	@field:SerializedName("name")
-	val name: String? = null,
+	val name: String,
 
 	@field:SerializedName("_id")
-	val id: String? = null,
+	val id: String,
 
 	@field:SerializedName("resetToken")
-	val resetToken: String? = null,
+	val resetToken: String,
 
 	@field:SerializedName("email")
-	val email: String? = null
+	val email: String
 )

@@ -42,7 +42,7 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            loginViewModel.login(email, password).observe(this) {result ->
+            loginViewModel.login(email, password).observe(this) { result ->
                 if (result != null) {
                     when(result) {
                         is Result.Error -> {
@@ -51,21 +51,37 @@ class LoginActivity : AppCompatActivity() {
                         }
                         Result.Loading -> showLoading(true)
                         is Result.Success -> {
-                            showLoading(false)
 
                             if (result.data.success) {
                                 val response = result.data
                                 val token = response.data
 
-                                showToast(response.message)
+                                loginViewModel.getUserData(token).observe(this) { user ->
+                                    if (user != null) {
+                                        when (user) {
+                                            is Result.Error -> {
+                                                showLoading(false)
+                                                showToast(user.error)
+                                            }
+                                            Result.Loading -> {}
+                                            is Result.Success -> {
+                                                showLoading(false)
 
-                                loginViewModel.saveSession(UserModel(email, token, true)) // simpan session user
+                                                val id = user.data.id
+                                                val name = user.data.name
 
-                                val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                startActivity(intent)
-                                finish()
-                            } else {
+                                                loginViewModel.saveSession(UserModel(id, name, email, token, true)) // simpan session user
+
+                                                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                                startActivity(intent)
+                                                finish()
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else {
                                 showToast(result.data.message)
                             }
                         }
