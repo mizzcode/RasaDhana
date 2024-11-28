@@ -9,6 +9,8 @@ import com.rasadhana.data.local.entity.RecipeEntity
 import com.rasadhana.data.local.room.RecipeDao
 import com.rasadhana.data.remote.retrofit.ApiService
 import com.rasadhana.data.remote.retrofit.DummyApiService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class RecipeRepository(private val apiService: ApiService, private val dummyApiService: DummyApiService, private val recipeDao: RecipeDao) {
 
@@ -20,7 +22,8 @@ class RecipeRepository(private val apiService: ApiService, private val dummyApiS
 
             Log.d("response", response.toString())
 
-            val data = response.map { recipe ->
+            withContext(Dispatchers.IO) {
+                val data = response.map { recipe ->
                     RecipeEntity(
                         name = recipe.name,
                         image = recipe.image,
@@ -32,6 +35,7 @@ class RecipeRepository(private val apiService: ApiService, private val dummyApiS
                 }
 
                 recipeDao.insertRecipes(data)
+            }
         } catch (e: Exception) {
             Log.d("RecipeRepository", "getDummyRecipe: ${e.message.toString()}")
             emit(Result.Error(e.message.toString()))

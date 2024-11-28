@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.rasadhana.GlideApp
+import com.rasadhana.R
 import com.rasadhana.data.local.entity.RecipeEntity
 import com.rasadhana.databinding.ItemColRecipeMaybeYouLikeItBinding
 
@@ -32,6 +33,7 @@ class RecipeSuggestionAdapter : ListAdapter<RecipeEntity, RecipeSuggestionAdapte
             GlideApp.with(itemView.context)
                 .load(recipe.image)
                 .diskCacheStrategy(DiskCacheStrategy.ALL) // Menyimpan gambar di disk cache
+                .error(R.drawable.ic_place_holder)
                 .into(binding.ivRecipe)
 
 //            itemView.setOnClickListener {

@@ -24,7 +24,6 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val homeViewModel: HomeViewModel by inject()
-    private val recipeSuggestionAdapter = RecipeSuggestionAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,9 +44,10 @@ class HomeFragment : Fragment() {
         return root
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val recipeSuggestionAdapter = RecipeSuggestionAdapter()
 
         homeViewModel.getDummyRecipes().observe(viewLifecycleOwner) { result ->
             if (result != null) {
@@ -65,17 +65,15 @@ class HomeFragment : Fragment() {
                         Log.d("HomeFragment", "List of Data: $listOfData")
 
                         recipeSuggestionAdapter.submitList(listOfData)
-
-                        binding.rvRecipeMaybeYouLikeIt.apply {
-                            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                            setHasFixedSize(true)
-                            adapter = recipeSuggestionAdapter
-                        }
-
-                        binding.rvRecipeMaybeYouLikeIt.adapter?.notifyDataSetChanged()
                     }
                 }
             }
+        }
+
+        binding.rvRecipeMaybeYouLikeIt.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = recipeSuggestionAdapter
         }
     }
 
