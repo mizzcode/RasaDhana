@@ -26,6 +26,8 @@ class PhotoFragment : Fragment() {
     private var _binding: FragmentPhotoBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: PhotoViewModel by inject()
+
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -36,8 +38,6 @@ class PhotoFragment : Fragment() {
                 showToast("Permission request denied")
             }
         }
-
-    private val viewModel: PhotoViewModel by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

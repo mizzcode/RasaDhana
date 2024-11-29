@@ -13,5 +13,7 @@ class LoginViewModel(private val userRepository: UserRepository): ViewModel() {
         }
     }
 
+    fun getUserData(token: String) = userRepository.getUserData(token)
+
     fun login(email: String, password: String) = userRepository.login(email, password)
 }

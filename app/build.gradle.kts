@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
+    id("kotlin-kapt")
 }
 
 android {
@@ -70,6 +71,7 @@ dependencies {
     implementation (libs.converter.gson)
 //    image load
     implementation (libs.glide)
+    ksp(libs.glideCompiler)
 //    room orm
     implementation(libs.androidx.room.runtime)
     ksp(libs.room.compiler)

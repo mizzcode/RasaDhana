@@ -1,5 +1,7 @@
 package com.rasadhana.di.koin
 
+import androidx.room.Room
+import com.rasadhana.data.local.room.RasadhanaDatabase
 import com.rasadhana.data.pref.UserPreference
 import com.rasadhana.data.pref.dataStore
 import com.rasadhana.data.remote.retrofit.ApiConfig
@@ -19,15 +21,26 @@ import org.koin.dsl.module
 
 val appModule = module {
     single { androidContext().dataStore }
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            RasadhanaDatabase::class.java, "Rasadhana.db"
+        )
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+    single { get<RasadhanaDatabase>().userDao() }
+    single { get<RasadhanaDatabase>().recipeDao() }
     single { ApiConfig.getApiService() }
+    single { ApiConfig.getDummyApiService() }
     single { UserPreference(dataStore = get()) }
-    single { RecipeRepository(apiService = get()) }
-    single { UserRepository(apiService = get(), userPreference = get())}
+    single { RecipeRepository(apiService = get(), dummyApiService = get(), recipeDao = get()) }
+    single { UserRepository(apiService = get(), userPreference = get(), userDao = get())}
 
     viewModel { PhotoViewModel() }
     viewModel { LoginViewModel(get()) }
     viewModel { RegisterViewModel(get()) }
-    viewModel { HomeViewModel(get()) }
+    viewModel { HomeViewModel(get(), get()) }
     viewModel { MainViewModel(get()) }
     viewModel { SplashViewModel(get()) }
     viewModel { ForgotPasswordViewModel(get()) }

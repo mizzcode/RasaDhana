@@ -14,6 +14,7 @@ import org.koin.android.ext.android.inject
 
 class CreateNewPasswordActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateNewPasswordBinding
+    private val createNewPasswordViewModel: CreateNewPasswordViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +45,6 @@ class CreateNewPasswordActivity : AppCompatActivity() {
                     binding.tfConfirmNewPassword.error = "Password dan konfirmasi password harus sama"
                     return@setOnClickListener
                 }
-
-                val createNewPasswordViewModel: CreateNewPasswordViewModel by inject()
 
                 createNewPasswordViewModel.updatePassword(otp, newPassword).observe(this) { result ->
                     if (result != null) {
