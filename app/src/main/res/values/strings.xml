@@ -56,4 +56,5 @@
     <string name="image_recipe">gambar resep</string>
     <string name="add_to_fav">tambah ke favorite</string>
     <string name="recipe_history">Riwayat Resep</string>
+    <string name="name_recipe">Nama Resep</string>
 </resources>
