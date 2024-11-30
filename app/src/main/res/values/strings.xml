@@ -51,7 +51,7 @@
     <string name="confirm_password">Konfirmasi Password</string>
     <string name="input_confirm_password">Masukkan Konfirmasi Password</string>
     <string name="greeting">Hai %s,\nMau Masak Menu apa hari ini?</string>
-    <string name="search_recipes">Cari Rekomendasi Resep Makanan</string>
+    <string name="search_recipes">Cari Resep Makanan</string>
     <string name="recipe_maybe_you_like_it">Resep Yang Mungkin Kamu Suka</string>
     <string name="image_recipe">gambar resep</string>
     <string name="add_to_fav">tambah ke favorite</string>

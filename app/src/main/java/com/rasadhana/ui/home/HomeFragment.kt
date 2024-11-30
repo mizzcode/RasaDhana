@@ -1,13 +1,21 @@
 package com.rasadhana.ui.home
 
 import android.os.Bundle
+import android.os.Looper
+import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.search.SearchView.TransitionState
 import com.rasadhana.R
 import com.rasadhana.data.Result
 import com.rasadhana.databinding.FragmentHomeBinding
@@ -21,6 +29,8 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    private var isSearchViewVisible = false
 
     private val homeViewModel: HomeViewModel by inject()
 
@@ -45,6 +55,84 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val recipeSearchResultAdapter = RecipeSearchResultAdapter()
+
+        homeViewModel.recipes.observe(viewLifecycleOwner) { recipes ->
+            if (recipes.isNullOrEmpty()) {
+                Log.d("SearchResults", "No results found.")
+            } else {
+                Log.d("SearchResults", "Results found: ${recipes.size}")
+                Log.d("SearchResults", "Results found: ${recipes.map { recipe ->
+                    recipe.name
+                }}")
+                recipeSearchResultAdapter.submitList(recipes)
+            }
+        }
+
+        binding.rvSearchResults.apply {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            adapter = recipeSearchResultAdapter
+        }
+
+        with(binding) {
+            searchView.setupWithSearchBar(searchBar)
+
+            val handler = Handler(Looper.getMainLooper())
+
+            searchView.editText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if (count == 0) {
+                        recipeSearchResultAdapter.submitList(emptyList())
+                    }
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    val query = s.toString().trim()
+
+                    handler.removeCallbacksAndMessages(null)
+                    handler.postDelayed({
+                        if (query.isNotEmpty()) {
+                            showToast(query)
+                            homeViewModel.searchRecipes(query)
+                        }
+                    }, 500L)
+                }
+            })
+
+            searchView.editText.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
+                    showToast(searchView.text.toString())
+                    searchView.hide()
+                    (requireActivity() as MainActivity).setBottomNavVisibility(true)
+                }
+                false
+            }
+
+            searchView.addTransitionListener { _, _, newState ->
+                if (newState === TransitionState.SHOWING) {
+                    isSearchViewVisible = true
+                    (requireActivity() as MainActivity).setBottomNavVisibility(false)
+                } else if (newState === TransitionState.HIDING) {
+                    (requireActivity() as MainActivity).setBottomNavVisibility(true)
+                }
+            }
+
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+                if (isSearchViewVisible) {
+                    searchView.hide()
+                    isSearchViewVisible = false
+                    (requireActivity() as MainActivity).setBottomNavVisibility(true)
+                } else {
+                    isEnabled = false
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        }
 
         val recipeSuggestionAdapter = RecipeSuggestionAdapter()
 
