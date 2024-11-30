@@ -25,7 +25,7 @@ RasaDhana is an innovative app that aims to help users utilize available food in
 
 ---
 
-## 📋 Installation
+## 📋 Installation (Development)
 Follow the steps below to run the app on your local device:
 
 ### 1. **Open Android Studio**
@@ -58,7 +58,7 @@ We are open for contributions! Please follow these steps to contribute:
 2. Create a new branch for your feature or improvement:
    ```bash
    git checkout -b your-branch-name
-3. Commit the changes to the repository that you have forked from this repository
+3. Commit the changes and push to the repository on github that you have forked from this repository
 4. Click New Pull Request, select the branch you created, and submit the pull request.
 
 ---
