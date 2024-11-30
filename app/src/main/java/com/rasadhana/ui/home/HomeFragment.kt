@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.addCallback
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.search.SearchView.TransitionState
@@ -27,6 +26,8 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    private var isSearchViewVisible = false
 
     private val homeViewModel: HomeViewModel by inject()
 
@@ -75,6 +76,7 @@ class HomeFragment : Fragment() {
 
             searchView.addTransitionListener { _, _, newState ->
                 if (newState === TransitionState.SHOWING) {
+                    isSearchViewVisible = true
                     (requireActivity() as MainActivity).setBottomNavVisibility(false)
                 } else if (newState === TransitionState.HIDING) {
                     (requireActivity() as MainActivity).setBottomNavVisibility(true)
@@ -82,8 +84,9 @@ class HomeFragment : Fragment() {
             }
 
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-                if (searchView.isVisible) {
+                if (isSearchViewVisible) {
                     searchView.hide()
+                    isSearchViewVisible = false
                     (requireActivity() as MainActivity).setBottomNavVisibility(true)
                 } else {
                     isEnabled = false
