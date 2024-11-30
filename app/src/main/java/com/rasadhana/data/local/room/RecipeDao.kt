@@ -10,8 +10,11 @@ import com.rasadhana.data.local.entity.RecipeEntity
 @Dao
 interface RecipeDao {
     @Query("SELECT * FROM Recipe WHERE dummy = 1")
-    fun getDummyRecipes(): LiveData<List<RecipeEntity>>
+    suspend fun getDummyRecipes(): List<RecipeEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRecipes(recipes: List<RecipeEntity>)
+
+    @Query("SELECT * FROM Recipe WHERE name LIKE :query")
+    fun searchRecipes(query: String): LiveData<List<RecipeEntity>>
 }
