@@ -1,11 +1,13 @@
 package com.rasadhana.data.remote.retrofit
 
+import com.rasadhana.data.remote.response.FileUploadResponse
 import com.rasadhana.data.remote.response.LoginResponse
 import com.rasadhana.data.remote.response.OtpResponse
 import com.rasadhana.data.remote.response.RegisterResponse
 import com.rasadhana.data.remote.response.ResetPasswordResponse
 import com.rasadhana.data.remote.response.UserDataResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -48,11 +50,10 @@ interface ApiService {
         @Field("newPassword") newPassword: String
     ) : ResetPasswordResponse
 
-//    @Multipart
-//    @POST("photos/upload-photo")
-//    suspend fun uploadImage(
-//        @Header("Authorization") token: String,
-//        @Part photo: MultipartBody.Part,
-//        @Part userId: String
-//    ) : FileUploadResponse
+    @Multipart
+    @POST("photos/upload-photo")
+    suspend fun uploadImage(
+        @Part photo: MultipartBody.Part,
+        @Part("userId") userId: RequestBody
+    ) : FileUploadResponse
 }

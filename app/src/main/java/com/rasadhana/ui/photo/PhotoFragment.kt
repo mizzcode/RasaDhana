@@ -20,13 +20,16 @@ import com.rasadhana.ui.main.MainActivity
 import com.rasadhana.R
 import com.rasadhana.databinding.FragmentPhotoBinding
 import com.rasadhana.getImageUri
+import com.rasadhana.reduceFileImage
+import com.rasadhana.uriToFile
 import org.koin.android.ext.android.inject
+import com.rasadhana.data.Result
 
 class PhotoFragment : Fragment() {
     private var _binding: FragmentPhotoBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: PhotoViewModel by inject()
+    private val photoViewModel: PhotoViewModel by inject()
 
     private val requestPermissionLauncher =
         registerForActivityResult(
@@ -70,7 +73,42 @@ class PhotoFragment : Fragment() {
 
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.cameraButton.setOnClickListener { startCamera() }
-//        binding.uploadButton.setOnClickListener { uploadImage() }
+        binding.uploadButton.setOnClickListener { uploadImage() }
+    }
+
+    private fun uploadImage() {
+        photoViewModel.currentImageUri?.let { uri ->
+            val imageFile = uriToFile(uri, requireContext()).reduceFileImage()
+            Log.d("Image File", "showImage: ${imageFile.path}")
+
+            photoViewModel.getSession().observe(viewLifecycleOwner) { user ->
+                Log.d("usesr", "$user")
+                    photoViewModel.uploadImage(imageFile, user.id).observe(viewLifecycleOwner) { result ->
+                        if (result != null) {
+                            when (result) {
+                                is Result.Error -> {
+                                    showLoading(false)
+                                    showToast(result.error)
+                                }
+                                Result.Loading -> {
+                                    showLoading(true)
+                                }
+                                is Result.Success -> {
+                                    showLoading(false)
+
+                                    if (result.data.success) {
+                                        val response = result.data
+                                        showToast(response.message)
+                                        Log.d("PhotoFragment", "Response: ${response.photoUrl}")
+                                    } else {
+                                        showToast(result.data.message)
+                                    }
+                                }
+                            }
+                        }
+                    }
+            }
+        } ?: showToast(getString(R.string.empty_image_warning))
     }
 
 
@@ -88,7 +126,7 @@ class PhotoFragment : Fragment() {
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         if (uri != null) {
-            viewModel.currentImageUri = uri
+            photoViewModel.currentImageUri = uri
             showImage()
         } else {
             Log.d("Photo Picker", "No media selected")
@@ -96,16 +134,16 @@ class PhotoFragment : Fragment() {
     }
 
     private fun showImage() {
-        viewModel.currentImageUri?.let {
+        photoViewModel.currentImageUri?.let {
             Log.d("Image URI", "showImage: $it")
             binding.previewImageView.setImageURI(it)
         }
     }
 
     private fun startCamera() {
-        Log.d("Photo Fragment", viewModel.currentImageUri.toString())
-        viewModel.currentImageUri = getImageUri(requireContext())
-        launcherIntentCamera.launch(viewModel.currentImageUri!!)
+        Log.d("Photo Fragment", photoViewModel.currentImageUri.toString())
+        photoViewModel.currentImageUri = getImageUri(requireContext())
+        launcherIntentCamera.launch(photoViewModel.currentImageUri!!)
     }
 
     private val launcherIntentCamera = registerForActivityResult(
@@ -114,7 +152,7 @@ class PhotoFragment : Fragment() {
         if (isSuccess) {
             showImage()
         } else {
-            viewModel.currentImageUri = null
+            photoViewModel.currentImageUri = null
         }
     }
 

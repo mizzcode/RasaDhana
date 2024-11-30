@@ -7,14 +7,13 @@ import androidx.lifecycle.map
 import com.rasadhana.data.Result
 import com.rasadhana.data.local.entity.RecipeEntity
 import com.rasadhana.data.local.room.RecipeDao
-import com.rasadhana.data.remote.retrofit.ApiService
 import com.rasadhana.data.remote.retrofit.DummyApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class RecipeRepository(private val apiService: ApiService, private val dummyApiService: DummyApiService, private val recipeDao: RecipeDao) {
+class RecipeRepository(private val dummyApiService: DummyApiService, private val recipeDao: RecipeDao) {
 
-    fun getDummyRecipes() : LiveData<Result<List<RecipeEntity>>> = liveData {
+    fun getDummyRecipes(): LiveData<Result<List<RecipeEntity>>> = liveData {
         emit(Result.Loading)
 
         try {
