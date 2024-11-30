@@ -7,9 +7,10 @@ import android.os.Handler
 import android.os.Looper
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.rasadhana.MainActivity
+import com.rasadhana.ui.main.MainActivity
 import com.rasadhana.R
 import com.rasadhana.ui.login.LoginActivity
+import org.koin.android.ext.android.inject
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : AppCompatActivity() {
@@ -20,12 +21,14 @@ class SplashScreenActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-//        TODO
-//        logic user udah login apa belum
-        if (true) {
-            moveTo(LoginActivity::class.java)
-        } else {
-            moveTo(MainActivity::class.java)
+        val splashViewModel: SplashViewModel by inject()
+
+        splashViewModel.getSession().observe(this) { user ->
+            if (!user.isLogin) {
+                moveTo(LoginActivity::class.java)
+            } else {
+                moveTo(MainActivity::class.java)
+            }
         }
     }
 

@@ -16,6 +16,7 @@
     <string name="register_now">Daftar Sekarang</string>
     <string name="register_account">Register</string>
     <string name="register">Register</string>
+    <string name="sent">Kirim</string>
     <string name="enter_your_personal_information">Enter your personal information</string>
     <string name="email">Email</string>
     <string name="input_email">Masukkan Email</string>
@@ -33,4 +34,28 @@
     <string name="generate_recipes">Generate Recipes</string>
     <string name="photo_ingredient">Foto Bahan</string>
     <string name="title_photo">Photo</string>
+    <string name="insert_otp">Masukkan OTP</string>
+    <string name="insert_otp_from_email">Masukkan kode OTP yang kami kirim melalui email anda yang terdaftar</string>
+    <string name="we_sent_otp_to_your_email">Kami sudah mengirimkan kode OTP pada %s cek kontak masuk anda</string>
+    <string name="image_forgot_password">Gambar Lupa Password</string>
+    <string name="desc_forgot_password">Tidak ingat kata sandi? Masukkan email Anda, dan kami akan mengirimkan kode untuk membuat kata sandi baru.</string>
+    <string name="sent_code">Kirim Kode</string>
+    <string name="default_otp_message">Email Kosong</string>
+    <string name="create_new_password">Buat Password Baru</string>
+    <string name="desc_create_new_password">Password baru kamu harus unik dari sebelumnya</string>
+    <string name="confirm_new_password">Konfirmasi Password Baru</string>
+    <string name="new_password">Password Baru</string>
+    <string name="input_new_password">Masukkan Password Baru</string>
+    <string name="input_confirm_new_password">Konfirmasi Password Baru</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="confirm_password">Konfirmasi Password</string>
+    <string name="input_confirm_password">Masukkan Konfirmasi Password</string>
+    <string name="greeting">Hai %s,\nMau Masak Menu apa hari ini?</string>
+    <string name="search_recipes">Cari Rekomendasi Resep Makanan</string>
+    <string name="recipe_maybe_you_like_it">Resep Yang Mungkin Kamu Suka</string>
+    <string name="image_recipe">gambar resep</string>
+    <string name="add_to_fav">tambah ke favorite</string>
+    <string name="recipe_history">Riwayat Resep</string>
+    <string name="name_recipe">Nama Resep</string>
+    <string name="empty_image_warning">Silakan masukkan berkas gambar terlebih dahulu.</string>
 </resources>

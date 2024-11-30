@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
+    id("kotlin-kapt")
 }
 
 android {
@@ -30,7 +31,7 @@ android {
         }
         debug {
             buildConfigField ("String", "API_KEY", "\"your_debug_api_key_here\"")
-            buildConfigField ("String", "BASE_URL", "\"your_debug_base_url_here\"")
+            buildConfigField ("String", "BASE_URL", "\"https://be-rasadhana-46959309864.asia-southeast2.run.app/\"")
         }
     }
     compileOptions {
@@ -59,7 +60,7 @@ dependencies {
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.fragment.ktx)
     testImplementation(libs.junit)
-    implementation(libs.androidx.activity)
+    implementation(libs.androidx.activity.ktx)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
@@ -70,6 +71,7 @@ dependencies {
     implementation (libs.converter.gson)
 //    image load
     implementation (libs.glide)
+    ksp(libs.glideCompiler)
 //    room orm
     implementation(libs.androidx.room.runtime)
     ksp(libs.room.compiler)
@@ -95,4 +97,10 @@ dependencies {
 
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
+
+    // otpview
+    implementation (libs.otpview)
+
+    // datastore
+    implementation(libs.androidx.datastore.preferences)
 }
