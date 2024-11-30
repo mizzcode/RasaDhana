@@ -46,7 +46,7 @@ Make sure you have the latest version of Android Studio installed.
 - **Dependency Injection**: Coin
 - **Image Loading**: Glide (with KSP)
 - **Database**: Room Database
-- **UI**: Material Components with Bottom Navigation
+- **UI XML**: Material Components with Bottom Navigation
 - **Architecture**: MVVM (Model-View-ViewModel) + Repository Pattern
 
 ---
