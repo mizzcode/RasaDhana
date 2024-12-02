@@ -33,6 +33,7 @@ class RecipeSuggestionAdapter : ListAdapter<RecipeEntity, RecipeSuggestionAdapte
             Glide.with(itemView.context)
                 .load(recipe.image)
                 .diskCacheStrategy(DiskCacheStrategy.ALL) // Menyimpan gambar di disk cache
+                .placeholder(R.drawable.ic_place_holder)
                 .error(R.drawable.ic_place_holder)
                 .into(binding.ivRecipe)
 

@@ -30,7 +30,7 @@ android {
         }
         debug {
             buildConfigField ("String", "API_KEY", "\"your_debug_api_key_here\"")
-            buildConfigField ("String", "BASE_URL", "\"https://be-rasadhana-46959309864.asia-southeast2.run.app/\"")
+            buildConfigField ("String", "BASE_URL", "\"https://be-rasadhana-245949327575.asia-southeast2.run.app/\"")
         }
     }
     compileOptions {
@@ -43,6 +43,7 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        mlModelBinding = true
     }
 }
 
@@ -58,6 +59,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.activity)
     testImplementation(libs.junit)
     implementation(libs.androidx.activity.ktx)
     androidTestImplementation(libs.androidx.junit)
@@ -102,4 +104,15 @@ dependencies {
 
     // datastore
     implementation(libs.androidx.datastore.preferences)
+
+    // tensorflow-lite + google play services + gpu acceleration
+    implementation(libs.tensorflow.lite.metadata)
+    implementation(libs.play.services.tflite.support)
+    implementation(libs.play.services.tflite.gpu)
+    implementation(libs.tensorflow.lite.task.vision.play.services)
+    implementation(libs.tensorflow.lite.gpu)
+
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
 }
