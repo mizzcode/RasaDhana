@@ -40,5 +40,4 @@ class UploadRepository(private val apiService: ApiService) {
             emit(Result.Error("Unable to complete the request. Please check your connection and try again."))
         }
     }
-
 }
