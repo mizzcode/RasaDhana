@@ -29,8 +29,16 @@ class UploadRepository(private val apiService: ApiService) {
             emit(Result.Success(successResponse))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, FileUploadResponse::class.java)
-            emit(Result.Error(errorResponse.message))
+            val errorMessage = try {
+                val errorResponse = Gson().fromJson(errorBody, FileUploadResponse::class.java)
+                errorResponse.message
+            } catch (parsingException: Exception) {
+                "Oops! Something went wrong. Please try again later."
+            }
+            emit(Result.Error(errorMessage))
+        } catch (e: Exception) {
+            emit(Result.Error("Unable to complete the request. Please check your connection and try again."))
         }
     }
+
 }
