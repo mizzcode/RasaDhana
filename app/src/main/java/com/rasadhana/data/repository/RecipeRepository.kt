@@ -47,7 +47,7 @@ class RecipeRepository(private val dummyApiService: DummyApiService, private val
             }
         } catch (e: Exception) {
             Log.d("RecipeRepository", "getDummyRecipe: ${e.message.toString()}")
-            emit(Result.Error(e.message.toString()))
+            emit(Result.Error("Tidak ada koneksi internet"))
         }
 
         val localData = recipeDao.getDummyRecipes()
