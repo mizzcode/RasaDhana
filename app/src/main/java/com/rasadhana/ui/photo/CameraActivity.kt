@@ -121,4 +121,10 @@ class CameraActivity : AppCompatActivity() {
         const val EXTRA_CAMERAX_IMAGE = "CameraX Image"
         const val CAMERAX_RESULT = 200
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Executors.newSingleThreadExecutor().shutdown()
+    }
+
 }
