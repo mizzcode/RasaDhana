@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -43,7 +44,6 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
-        mlModelBinding = true
     }
 }
 
@@ -104,15 +104,4 @@ dependencies {
 
     // datastore
     implementation(libs.androidx.datastore.preferences)
-
-    // tensorflow-lite + google play services + gpu acceleration
-    implementation(libs.tensorflow.lite.metadata)
-    implementation(libs.play.services.tflite.support)
-    implementation(libs.play.services.tflite.gpu)
-    implementation(libs.tensorflow.lite.task.vision.play.services)
-    implementation(libs.tensorflow.lite.gpu)
-
-    implementation(libs.androidx.camera.camera2)
-    implementation(libs.androidx.camera.lifecycle)
-    implementation(libs.androidx.camera.view)
 }

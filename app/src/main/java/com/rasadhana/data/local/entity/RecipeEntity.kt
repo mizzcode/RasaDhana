@@ -1,8 +1,11 @@
 package com.rasadhana.data.local.entity
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(tableName = "Recipe")
 class RecipeEntity (
     @PrimaryKey
@@ -11,6 +14,5 @@ class RecipeEntity (
     val image: String,
     val howToMake: String,
     val ingredients: String,
-    val isFavorite: Boolean,
-    val dummy: Boolean
-)
+    val isFavorite: Boolean = false,
+) : Parcelable

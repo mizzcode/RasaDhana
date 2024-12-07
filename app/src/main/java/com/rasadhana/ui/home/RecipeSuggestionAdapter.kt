@@ -16,8 +16,7 @@ import com.rasadhana.R
 import com.rasadhana.data.local.entity.RecipeEntity
 import com.rasadhana.databinding.ItemColRecipeMaybeYouLikeItBinding
 import com.rasadhana.ui.detail.DetailActivity
-import com.rasadhana.ui.detail.DetailActivity.Companion.EXTRA_IMAGE
-import com.rasadhana.ui.detail.DetailActivity.Companion.EXTRA_TITLE
+import com.rasadhana.ui.detail.DetailActivity.Companion.EXTRA_RECIPE
 
 class RecipeSuggestionAdapter : ListAdapter<RecipeEntity, RecipeSuggestionAdapter.MyViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -45,9 +44,11 @@ class RecipeSuggestionAdapter : ListAdapter<RecipeEntity, RecipeSuggestionAdapte
 
             itemView.setOnClickListener {
                 val intent = Intent(itemView.context, DetailActivity::class.java)
-                intent.putExtra(EXTRA_TITLE, recipe.name)
-                intent.putExtra(EXTRA_IMAGE, recipe.image)
-                itemView.context.startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(itemView.context as Activity).toBundle())
+                intent.putExtra(EXTRA_RECIPE, recipe)
+                itemView.context.startActivity(intent,
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        itemView.context as Activity
+                    ).toBundle())
             }
         }
     }

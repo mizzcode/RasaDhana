@@ -3,54 +3,60 @@ package com.rasadhana.data.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import com.google.gson.Gson
 import com.rasadhana.data.Result
 import com.rasadhana.data.local.entity.RecipeEntity
 import com.rasadhana.data.local.room.RecipeDao
-import com.rasadhana.data.remote.retrofit.DummyApiService
+import com.rasadhana.data.remote.response.FileUploadResponse
+import com.rasadhana.data.remote.response.HomeResponse
+import com.rasadhana.data.remote.retrofit.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
-class RecipeRepository(private val dummyApiService: DummyApiService, private val recipeDao: RecipeDao) {
+class RecipeRepository(private val apiService: ApiService, private val recipeDao: RecipeDao) {
 
     fun searchRecipes(query: String): LiveData<List<RecipeEntity>>  {
         return recipeDao.searchRecipes("%$query%")
     }
 
-    fun getDummyRecipes(): LiveData<Result<List<RecipeEntity>>> = liveData {
+    fun getAllRecipe(): LiveData<Result<List<RecipeEntity>>> = liveData {
         emit(Result.Loading)
 
-        val localDataRecipes = recipeDao.getDummyRecipes()
+        val localDataRecipes = recipeDao.getAllRecipe()
 
         if (localDataRecipes.isNotEmpty()) {
-            Log.d("RecipeRepository", "getDummyRecipe1: $localDataRecipes")
+            Log.d("RecipeRepository", "getAllRecipe: $localDataRecipes")
             emit(Result.Success(localDataRecipes))
             return@liveData
         }
 
         try {
-            val response = dummyApiService.getDummyRecipes()
+            val response = apiService.getAllRecipe()
 
             Log.d("response", response.toString())
 
+            val recipes = response.recipes
+
             withContext(Dispatchers.IO) {
-                val data = response.map { recipe ->
+                val data = recipes.map { recipe ->
                     RecipeEntity(
-                        name = recipe.name,
-                        image = recipe.image,
+                        name = recipe.title,
+                        image = recipe.recipeImage,
                         ingredients = recipe.ingredients,
-                        howToMake = recipe.howToMake,
-                        isFavorite = recipe.isFavorite == "1",
-                        dummy = recipe.dummy == "1"
+                        howToMake = recipe.steps,
                     )
                 }
                 recipeDao.insertRecipes(data)
             }
+        } catch (e: HttpException) {
+            val errorMessage = "Oops! Something went wrong. Please try again later."
+            emit(Result.Error(errorMessage))
         } catch (e: Exception) {
-            Log.d("RecipeRepository", "getDummyRecipe: ${e.message.toString()}")
-            emit(Result.Error("Tidak ada koneksi internet"))
+            emit(Result.Error("Unable to complete the request. Please check your connection and try again."))
         }
 
-        val localData = recipeDao.getDummyRecipes()
+        val localData = recipeDao.getAllRecipe()
         emit(Result.Success(localData))
     }
 }

@@ -1,7 +1,6 @@
 package com.rasadhana.ui.photo
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -16,7 +15,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.navigation.fragment.findNavController
 import com.rasadhana.ui.main.MainActivity
 import com.rasadhana.R
@@ -26,7 +24,6 @@ import com.rasadhana.reduceFileImage
 import com.rasadhana.uriToFile
 import org.koin.android.ext.android.inject
 import com.rasadhana.data.Result
-import com.rasadhana.ui.photo.CameraActivity.Companion.CAMERAX_RESULT
 
 class PhotoFragment : Fragment() {
     private var _binding: FragmentPhotoBinding? = null
@@ -74,59 +71,45 @@ class PhotoFragment : Fragment() {
             findNavController().navigateUp()
         }
 
+        binding.cameraButton.setOnClickListener { startCamera() }
         binding.galleryButton.setOnClickListener { startGallery() }
-        binding.cameraButton.setOnClickListener { startCameraX() }
-//        binding.uploadButton.setOnClickListener { uploadImage() }
+        binding.uploadButton.setOnClickListener { uploadImage() }
     }
 
-    private fun startCameraX() {
-        val intent = Intent(requireActivity(), CameraActivity::class.java)
-        launcherIntentCameraX.launch(intent)
-    }
+    private fun uploadImage() {
+        photoViewModel.currentImageUri?.let { uri ->
+            val imageFile = uriToFile(uri, requireContext()).reduceFileImage()
+            Log.d("Image File", "showImage: ${imageFile.path}")
 
-    private val launcherIntentCameraX = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
-        if (it.resultCode == CAMERAX_RESULT) {
-            photoViewModel.currentImageUri = it.data?.getStringExtra(CameraActivity.EXTRA_CAMERAX_IMAGE)?.toUri()
-            showImage()
-        }
-    }
+            photoViewModel.getSession().observe(viewLifecycleOwner) { user ->
+                Log.d("PhotoFragment", "$user")
+                    photoViewModel.uploadImage(imageFile, user.id).observe(viewLifecycleOwner) { result ->
+                        if (result != null) {
+                            when (result) {
+                                is Result.Error -> {
+                                    showLoading(false)
+                                    showToast(result.error)
+                                }
+                                Result.Loading -> {
+                                    showLoading(true)
+                                }
+                                is Result.Success -> {
+                                    showLoading(false)
 
-//    private fun uploadImage() {
-//        photoViewModel.currentImageUri?.let { uri ->
-//            val imageFile = uriToFile(uri, requireContext()).reduceFileImage()
-//            Log.d("Image File", "showImage: ${imageFile.path}")
-//
-//            photoViewModel.getSession().observe(viewLifecycleOwner) { user ->
-//                Log.d("usesr", "$user")
-//                    photoViewModel.uploadImage(imageFile, user.id).observe(viewLifecycleOwner) { result ->
-//                        if (result != null) {
-//                            when (result) {
-//                                is Result.Error -> {
-//                                    showLoading(false)
-//                                    showToast(result.error)
-//                                }
-//                                Result.Loading -> {
-//                                    showLoading(true)
-//                                }
-//                                is Result.Success -> {
-//                                    showLoading(false)
-//
-//                                    if (result.data.success) {
-//                                        val response = result.data
-//                                        showToast(response.message)
-//                                        Log.d("PhotoFragment", "Response: ${response.photoUrl}")
-//                                    } else {
-//                                        showToast(result.data.message)
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//            }
-//        } ?: showToast(getString(R.string.empty_image_warning))
-//    }
+                                    if (result.data.success) {
+                                        val response = result.data
+                                        showToast(response.message)
+                                        Log.d("PhotoFragment", "Response: ${response.photoUrl}")
+                                    } else {
+                                        showToast(result.data.message)
+                                    }
+                                }
+                            }
+                        }
+                    }
+            }
+        } ?: showToast(getString(R.string.empty_image_warning))
+    }
 
 
     private fun allPermissionsGranted() =

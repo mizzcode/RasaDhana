@@ -25,6 +25,5 @@ class HomeViewModel(private val userRepository: UserRepository, private val reci
         return userRepository.getSession().asLiveData()
     }
 
-    fun getDummyRecipes() = recipeRepository.getDummyRecipes()
-
+    fun getAllRecipe() = recipeRepository.getAllRecipe()
 }

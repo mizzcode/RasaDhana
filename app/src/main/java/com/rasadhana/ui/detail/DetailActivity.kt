@@ -1,5 +1,6 @@
 package com.rasadhana.ui.detail
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
@@ -13,11 +14,13 @@ import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.rasadhana.R
+import com.rasadhana.data.local.entity.RecipeEntity
 import com.rasadhana.databinding.ActivityDetailBinding
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding : ActivityDetailBinding
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,15 +32,14 @@ class DetailActivity : AppCompatActivity() {
             insets
         }
 
-        val name = intent.getStringExtra(EXTRA_TITLE)
-        val image = intent.getStringExtra(EXTRA_IMAGE)
+        val recipe = intent.getParcelableExtra<RecipeEntity>(EXTRA_RECIPE)
 
-        Log.d("DetailActivity", "Title: $name, Image: $image")
+        Log.d("DetailActivity", "Title: ${recipe?.name}, Image: ${recipe?.image}")
 
         supportActionBar?.apply {
             setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@DetailActivity, R.color.blue)))
             setDisplayHomeAsUpEnabled(true)
-            title = "Resep $name"
+            title = "Resep ${recipe?.name}"
 
         }
 
@@ -45,11 +47,14 @@ class DetailActivity : AppCompatActivity() {
         titleTextView?.setTextColor(ContextCompat.getColor(this@DetailActivity, android.R.color.white))
 
         Glide.with(this)
-            .load(image)
+            .load(recipe?.image)
             .placeholder(R.drawable.ic_place_holder)
             .diskCacheStrategy(DiskCacheStrategy.ALL) // Menyimpan gambar di disk cache
             .error(R.drawable.ic_place_holder)
             .into(binding.ivRecipe)
+
+        binding.tvIngredient.text = "Bahan-Bahan :\n\n${recipe?.ingredients}"
+        binding.tvHowToMake.text = "Cara Membuat :\n\n${recipe?.howToMake}"
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -63,7 +68,6 @@ class DetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val EXTRA_TITLE = "title"
-        const val EXTRA_IMAGE = "image"
+        const val EXTRA_RECIPE = "extra_recipe"
     }
 }

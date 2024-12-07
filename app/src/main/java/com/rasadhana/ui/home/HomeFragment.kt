@@ -136,7 +136,7 @@ class HomeFragment : Fragment() {
 
         val recipeSuggestionAdapter = RecipeSuggestionAdapter()
 
-        homeViewModel.getDummyRecipes().observe(viewLifecycleOwner) { result ->
+        homeViewModel.getAllRecipe().observe(viewLifecycleOwner) { result ->
             if (result != null) {
                 when (result) {
                     is Result.Error -> {
