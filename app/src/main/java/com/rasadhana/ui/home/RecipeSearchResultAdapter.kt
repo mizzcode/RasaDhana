@@ -1,7 +1,6 @@
 package com.rasadhana.ui.home
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
