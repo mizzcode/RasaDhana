@@ -71,8 +71,8 @@ class PhotoFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        binding.galleryButton.setOnClickListener { startGallery() }
         binding.cameraButton.setOnClickListener { startCamera() }
+        binding.galleryButton.setOnClickListener { startGallery() }
         binding.uploadButton.setOnClickListener { uploadImage() }
     }
 
@@ -82,7 +82,7 @@ class PhotoFragment : Fragment() {
             Log.d("Image File", "showImage: ${imageFile.path}")
 
             photoViewModel.getSession().observe(viewLifecycleOwner) { user ->
-                Log.d("usesr", "$user")
+                Log.d("PhotoFragment", "$user")
                     photoViewModel.uploadImage(imageFile, user.id).observe(viewLifecycleOwner) { result ->
                         if (result != null) {
                             when (result) {

@@ -1,6 +1,7 @@
 package com.rasadhana.data.remote.retrofit
 
 import com.rasadhana.data.remote.response.FileUploadResponse
+import com.rasadhana.data.remote.response.HomeResponse
 import com.rasadhana.data.remote.response.LoginResponse
 import com.rasadhana.data.remote.response.OtpResponse
 import com.rasadhana.data.remote.response.RegisterResponse
@@ -56,4 +57,7 @@ interface ApiService {
         @Part photo: MultipartBody.Part,
         @Part("userId") userId: RequestBody
     ) : FileUploadResponse
+
+    @GET("recipes/allrecipe")
+    suspend fun getAllRecipe() : HomeResponse
 }

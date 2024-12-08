@@ -33,9 +33,8 @@ val appModule = module {
     single { get<RasadhanaDatabase>().userDao() }
     single { get<RasadhanaDatabase>().recipeDao() }
     single { ApiConfig.getApiService() }
-    single { ApiConfig.getDummyApiService() }
     single { UserPreference(dataStore = get()) }
-    single { RecipeRepository(dummyApiService = get(), recipeDao = get()) }
+    single { RecipeRepository(apiService = get(), recipeDao = get()) }
     single { UserRepository(apiService = get(), userPreference = get(), userDao = get())}
     single { UploadRepository(apiService = get()) }
 

@@ -27,8 +27,15 @@ class UserRepository(private val apiService: ApiService, private val userPrefere
             emit(Result.Success(response))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, RegisterResponse::class.java)
-            emit(Result.Error(errorResponse.message))
+            val errorMessage = try {
+                val errorResponse = Gson().fromJson(errorBody, RegisterResponse::class.java)
+                errorResponse.message
+            } catch (parsingException: Exception) {
+                "Oops! Something went wrong. Please try again later."
+            }
+            emit(Result.Error(errorMessage))
+        } catch (e: Exception) {
+            emit(Result.Error("Unable to complete the request. Please check your connection and try again."))
         }
     }
 
@@ -40,8 +47,15 @@ class UserRepository(private val apiService: ApiService, private val userPrefere
             emit(Result.Success(response))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, LoginResponse::class.java)
-            emit(Result.Error(errorResponse.message))
+            val errorMessage = try {
+                val errorResponse = Gson().fromJson(errorBody, LoginResponse::class.java)
+                errorResponse.message
+            } catch (parsingException: Exception) {
+                "Oops! Something went wrong. Please try again later."
+            }
+            emit(Result.Error(errorMessage))
+        } catch (e: Exception) {
+            emit(Result.Error("Unable to complete the request. Please check your connection and try again."))
         }
     }
 
@@ -64,12 +78,16 @@ class UserRepository(private val apiService: ApiService, private val userPrefere
             val localData: LiveData<Result<UserEntity>> = userDao.getUserById(data.id).map { Result.Success(it) }
             emitSource(localData)
         } catch (e: HttpException) {
-            // Parse error body from API
             val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, UserDataResponse::class.java)
-            emit(Result.Error(errorResponse.message))
+            val errorMessage = try {
+                val errorResponse = Gson().fromJson(errorBody, UserDataResponse::class.java)
+                errorResponse.message
+            } catch (parsingException: Exception) {
+                "Oops! Something went wrong. Please try again later."
+            }
+            emit(Result.Error(errorMessage))
         } catch (e: Exception) {
-            emit(Result.Error(e.message.toString()))
+            emit(Result.Error("Unable to complete the request. Please check your connection and try again."))
         }
     }
 
@@ -81,8 +99,15 @@ class UserRepository(private val apiService: ApiService, private val userPrefere
             emit(Result.Success(response))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, OtpResponse::class.java)
-            emit(Result.Error(errorResponse.message))
+            val errorMessage = try {
+                val errorResponse = Gson().fromJson(errorBody, OtpResponse::class.java)
+                errorResponse.message
+            } catch (parsingException: Exception) {
+                "Oops! Something went wrong. Please try again later."
+            }
+            emit(Result.Error(errorMessage))
+        } catch (e: Exception) {
+            emit(Result.Error("Unable to complete the request. Please check your connection and try again."))
         }
     }
 
@@ -94,8 +119,15 @@ class UserRepository(private val apiService: ApiService, private val userPrefere
             emit(Result.Success(response))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
-            val errorResponse = Gson().fromJson(errorBody, ResetPasswordResponse::class.java)
-            emit(Result.Error(errorResponse.message))
+            val errorMessage = try {
+                val errorResponse = Gson().fromJson(errorBody, ResetPasswordResponse::class.java)
+                errorResponse.message
+            } catch (parsingException: Exception) {
+                "Oops! Something went wrong. Please try again later."
+            }
+            emit(Result.Error(errorMessage))
+        } catch (e: Exception) {
+            emit(Result.Error("Unable to complete the request. Please check your connection and try again."))
         }
     }
 

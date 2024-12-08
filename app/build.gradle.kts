@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -30,7 +31,7 @@ android {
         }
         debug {
             buildConfigField ("String", "API_KEY", "\"your_debug_api_key_here\"")
-            buildConfigField ("String", "BASE_URL", "\"https://be-rasadhana-46959309864.asia-southeast2.run.app/\"")
+            buildConfigField ("String", "BASE_URL", "\"https://be-rasadhana-245949327575.asia-southeast2.run.app/\"")
         }
     }
     compileOptions {
@@ -58,6 +59,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.activity)
     testImplementation(libs.junit)
     implementation(libs.androidx.activity.ktx)
     androidTestImplementation(libs.androidx.junit)

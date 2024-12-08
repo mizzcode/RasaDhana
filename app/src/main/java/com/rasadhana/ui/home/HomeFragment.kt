@@ -136,7 +136,7 @@ class HomeFragment : Fragment() {
 
         val recipeSuggestionAdapter = RecipeSuggestionAdapter()
 
-        homeViewModel.getDummyRecipes().observe(viewLifecycleOwner) { result ->
+        homeViewModel.getAllRecipe().observe(viewLifecycleOwner) { result ->
             if (result != null) {
                 when (result) {
                     is Result.Error -> {
@@ -169,7 +169,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
     override fun onDestroyView() {
