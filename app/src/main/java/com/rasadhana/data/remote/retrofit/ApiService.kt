@@ -5,6 +5,7 @@ import com.rasadhana.data.remote.response.HomeResponse
 import com.rasadhana.data.remote.response.LoginResponse
 import com.rasadhana.data.remote.response.OtpResponse
 import com.rasadhana.data.remote.response.RegisterResponse
+import com.rasadhana.data.remote.response.RegisterVerifyOtpResponse
 import com.rasadhana.data.remote.response.ResetPasswordResponse
 import com.rasadhana.data.remote.response.UserDataResponse
 import okhttp3.MultipartBody
@@ -27,6 +28,13 @@ interface ApiService {
     ) : RegisterResponse
 
     @FormUrlEncoded
+    @POST("auth/verify-otp")
+    suspend fun registerVerifyOtp(
+        @Field("email") email: String,
+        @Field("otp") otp: String,
+    ) : RegisterVerifyOtpResponse
+
+    @FormUrlEncoded
     @POST("auth/login-user")
     suspend fun login(
         @Field("email") email: String,
@@ -40,7 +48,7 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("auth/forgot-password")
-    suspend fun getOtp(
+    suspend fun getOtpForgotPassword(
         @Field("email") email: String
     ) : OtpResponse
 

@@ -12,6 +12,7 @@ import com.rasadhana.data.pref.UserPreference
 import com.rasadhana.data.remote.response.LoginResponse
 import com.rasadhana.data.remote.response.OtpResponse
 import com.rasadhana.data.remote.response.RegisterResponse
+import com.rasadhana.data.remote.response.RegisterVerifyOtpResponse
 import com.rasadhana.data.remote.response.ResetPasswordResponse
 import com.rasadhana.data.remote.response.UserDataResponse
 import com.rasadhana.data.remote.retrofit.ApiService
@@ -29,6 +30,27 @@ class UserRepository(private val apiService: ApiService, private val userPrefere
             val errorBody = e.response()?.errorBody()?.string()
             val errorMessage = try {
                 val errorResponse = Gson().fromJson(errorBody, RegisterResponse::class.java)
+                errorResponse.message
+            } catch (parsingException: Exception) {
+                "Oops! Something went wrong. Please try again later."
+            }
+            emit(Result.Error(errorMessage))
+        } catch (e: Exception) {
+            emit(Result.Error("Unable to complete the request. Please check your connection and try again."))
+        }
+    }
+
+
+    fun registerVerify(email: String, otp: String) = liveData {
+        emit(Result.Loading)
+
+        try {
+            val response = apiService.registerVerifyOtp(email, otp)
+            emit(Result.Success(response))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorMessage = try {
+                val errorResponse = Gson().fromJson(errorBody, RegisterVerifyOtpResponse::class.java)
                 errorResponse.message
             } catch (parsingException: Exception) {
                 "Oops! Something went wrong. Please try again later."
@@ -91,11 +113,11 @@ class UserRepository(private val apiService: ApiService, private val userPrefere
         }
     }
 
-    fun getOtp(email: String) = liveData {
+    fun getOtpForgotPassword(email: String) = liveData {
         emit(Result.Loading)
 
         try {
-            val response = apiService.getOtp(email)
+            val response = apiService.getOtpForgotPassword(email)
             emit(Result.Success(response))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
