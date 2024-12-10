@@ -12,12 +12,6 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_favorite"
-        android:name="com.rasadhana.ui.favorite.FavoriteFragment"
-        android:label="@string/title_favorite"
-        tools:layout="@layout/fragment_favorite" />
-
-    <fragment
         android:id="@+id/navigation_photo"
         android:name="com.rasadhana.ui.photo.PhotoFragment"
         android:label="@string/title_photo"
@@ -26,6 +20,12 @@
             android:id="@+id/action_navigation_photo_to_navigation_home"
             app:destination="@id/navigation_home" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_favorite"
+        android:name="com.rasadhana.ui.favorite.FavoriteFragment"
+        android:label="@string/title_favorite"
+        tools:layout="@layout/fragment_favorite" />
 
     <fragment
         android:id="@+id/navigation_account"
