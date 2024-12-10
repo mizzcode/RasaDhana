@@ -32,6 +32,7 @@ android {
         debug {
             buildConfigField ("String", "API_KEY", "\"your_debug_api_key_here\"")
             buildConfigField ("String", "BASE_URL", "\"https://be-rasadhana-245949327575.asia-southeast2.run.app/\"")
+            buildConfigField ("String", "ML_BASE_URL", "\"https://ml-rasadhana-245949327575.asia-southeast2.run.app/\"")
         }
     }
     compileOptions {

@@ -6,12 +6,18 @@ import androidx.lifecycle.liveData
 import com.rasadhana.data.Result
 import com.rasadhana.data.local.entity.RecipeEntity
 import com.rasadhana.data.local.room.RecipeDao
+import com.rasadhana.data.remote.response.RecipeResponse
 import com.rasadhana.data.remote.retrofit.ApiService
+import com.rasadhana.data.remote.retrofit.MlApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
-class RecipeRepository(private val apiService: ApiService, private val recipeDao: RecipeDao) {
+class RecipeRepository(
+    private val apiService: ApiService,
+    private val recipeDao: RecipeDao,
+    private val mlApiService: MlApiService
+) {
 
     fun searchRecipes(query: String): LiveData<List<RecipeEntity>>  {
         return recipeDao.searchRecipes("%$query%")
@@ -55,5 +61,22 @@ class RecipeRepository(private val apiService: ApiService, private val recipeDao
 
         val localData = recipeDao.getAllRecipe()
         emit(Result.Success(localData))
+    }
+
+    fun generateRecipe(userId: String): LiveData<Result<RecipeResponse>> = liveData {
+        emit(Result.Loading)
+
+        try {
+            val response = mlApiService.generateRecipes(userId)
+
+            Log.d("response", response.toString())
+
+            emit(Result.Success(response))
+        } catch (e: HttpException) {
+            val errorMessage = "Oops! Something went wrong. Please try again later."
+            emit(Result.Error(errorMessage))
+        } catch (e: Exception) {
+            emit(Result.Error("Unable to complete the request. Please check your connection and try again."))
+        }
     }
 }

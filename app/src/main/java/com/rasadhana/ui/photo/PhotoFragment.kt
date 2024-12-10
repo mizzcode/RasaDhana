@@ -1,6 +1,7 @@
 package com.rasadhana.ui.photo
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -73,7 +74,51 @@ class PhotoFragment : Fragment() {
 
         binding.cameraButton.setOnClickListener { startCamera() }
         binding.galleryButton.setOnClickListener { startGallery() }
-        binding.uploadButton.setOnClickListener { uploadImage() }
+        binding.generateRecipeButton.setOnClickListener { generateRecipe() }
+        binding.resultGenerateRecipes.setOnClickListener { moveToRecommendationRecipes() }
+    }
+
+    private fun moveToRecommendationRecipes() {
+//        val intent = Intent(requireContext(), RecommendationRecipes)
+    }
+
+    private fun generateRecipe() {
+        photoViewModel.getSession().observe(viewLifecycleOwner) { user ->
+            photoViewModel.generateRecipe(user.id).observe(viewLifecycleOwner) { result ->
+                if (result != null) {
+                    when (result) {
+                        is Result.Error -> {
+                            showLoading(false)
+                            showGenerateButton(true)
+                            showResultRecipes(false)
+                            showToast(result.error)
+                        }
+                        Result.Loading -> {
+                            showLoading(true)
+                            showGenerateButton(true)
+                            showResultRecipes(false)
+                        }
+                        is Result.Success -> {
+                            showLoading(false)
+                            showGenerateButton(false)
+
+                            val response = result.data
+
+                            val count = response.recipes.size
+                            val title = response.recipes.joinToString(", ") { it.title }
+
+                            Log.d("title resep", title)
+
+                            binding.resultGenerateRecipes.text = getString(R.string.result_generate_recipe, count, title)
+
+                            showResultRecipes(true)
+
+                            Log.d("PhotoFragment", "Response: $response")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun uploadImage() {
@@ -87,10 +132,14 @@ class PhotoFragment : Fragment() {
                         if (result != null) {
                             when (result) {
                                 is Result.Error -> {
+                                    showGenerateButton(false)
+                                    showResultRecipes(false)
                                     showLoading(false)
                                     showToast(result.error)
                                 }
                                 Result.Loading -> {
+                                    showGenerateButton(false)
+                                    showResultRecipes(false)
                                     showLoading(true)
                                 }
                                 is Result.Success -> {
@@ -99,7 +148,9 @@ class PhotoFragment : Fragment() {
                                     if (result.data.success) {
                                         val response = result.data
                                         showToast(response.message)
-                                        Log.d("PhotoFragment", "Response: ${response.photoUrl}")
+                                        showGenerateButton(true)
+                                        showResultRecipes(false)
+                                        Log.d("PhotoFragment", "Response: $response")
                                     } else {
                                         showToast(result.data.message)
                                     }
@@ -127,6 +178,7 @@ class PhotoFragment : Fragment() {
     ) { uri: Uri? ->
         if (uri != null) {
             photoViewModel.currentImageUri = uri
+            uploadImage()
             showImage()
         } else {
             Log.d("Photo Picker", "No media selected")
@@ -150,6 +202,7 @@ class PhotoFragment : Fragment() {
         ActivityResultContracts.TakePicture()
     ) { isSuccess ->
         if (isSuccess) {
+            uploadImage()
             showImage()
         } else {
             photoViewModel.currentImageUri = null
@@ -162,6 +215,14 @@ class PhotoFragment : Fragment() {
 
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showGenerateButton(visibility: Boolean) {
+        binding.generateRecipeButton.visibility = if (visibility) View.VISIBLE else View.GONE
+    }
+
+    private fun showResultRecipes(visibility: Boolean) {
+        binding.resultGenerateRecipes.visibility = if (visibility) View.VISIBLE else View.GONE
     }
 
     companion object {

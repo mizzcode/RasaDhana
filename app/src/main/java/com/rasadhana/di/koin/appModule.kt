@@ -34,12 +34,13 @@ val appModule = module {
     single { get<RasadhanaDatabase>().userDao() }
     single { get<RasadhanaDatabase>().recipeDao() }
     single { ApiConfig.getApiService() }
+    single { ApiConfig.getMlApiService() }
     single { UserPreference(dataStore = get()) }
-    single { RecipeRepository(apiService = get(), recipeDao = get()) }
+    single { RecipeRepository(apiService = get(), recipeDao = get(), mlApiService = get()) }
     single { UserRepository(apiService = get(), userPreference = get(), userDao = get())}
     single { UploadRepository(apiService = get()) }
 
-    viewModel { PhotoViewModel(get(), get()) }
+    viewModel { PhotoViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { RegisterViewModel(get()) }
     viewModel { HomeViewModel(get(), get()) }
