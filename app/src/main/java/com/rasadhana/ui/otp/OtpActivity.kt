@@ -8,8 +8,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.rasadhana.R
+import com.rasadhana.data.Result
 import com.rasadhana.databinding.ActivityOtpBinding
 import com.rasadhana.ui.forgotpassword.CreateNewPasswordActivity
+import com.rasadhana.ui.login.LoginActivity
+import org.koin.android.ext.android.inject
 
 class OtpActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOtpBinding
@@ -22,7 +25,10 @@ class OtpActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
+        val otpViewModel: OtpViewModel by inject()
+
         val email = intent.getStringExtra(EXTRA_EMAIL)
+        val password = intent.getStringExtra(EXTRA_PASSWORD)
 
         val message = getString(R.string.we_sent_otp_to_your_email, email)
 
@@ -45,6 +51,20 @@ class OtpActivity : AppCompatActivity() {
                         FORGOT_PASSWORD -> {
                             val intent = Intent(this@OtpActivity, CreateNewPasswordActivity::class.java)
                             intent.putExtra(EXTRA_OTP, currentOtp)
+                            startActivity(intent)
+                        }
+                        REGISTER -> {
+                            Log.d("OTP REGISTER", "OTP: $currentOtp, $email, $password")
+                            val intent = Intent(this@OtpActivity, LoginActivity::class.java)
+                            otpViewModel.userVerify(email.toString(), currentOtp).observe(this) { result ->
+                                if (result != null) {
+                                    when (result) {
+                                        is Result.Error -> TODO()
+                                        Result.Loading -> TODO()
+                                        is Result.Success -> TODO()
+                                    }
+                                }
+                            }
                             startActivity(intent)
                         }
                         else -> {
@@ -73,6 +93,8 @@ class OtpActivity : AppCompatActivity() {
         const val EXTRA_EMAIL = "extra_email"
         const val EXTRA_TYPE = "extra_type"
         const val EXTRA_OTP = "extra_otp"
+        const val EXTRA_PASSWORD = "extra_password"
         const val FORGOT_PASSWORD = "forgot_password"
+        const val REGISTER = "register"
     }
 }

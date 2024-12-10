@@ -64,17 +64,39 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/uploadButton"
+        android:id="@+id/generateRecipeButton"
         android:layout_width="325dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="45dp"
+        android:visibility="gone"
         android:text="@string/generate_recipes"
         app:iconGravity="textStart"
         android:textStyle="bold"
         android:textSize="16sp"
         app:icon="@drawable/baseline_auto_fix_high_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/resultGenerateRecipes"
+        android:layout_width="325dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="45dp"
+        android:paddingVertical="10dp"
+        android:visibility="gone"
+        android:textAlignment="textStart"
+        android:text="@string/result_generate_recipe"
+        app:iconGravity="textEnd"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        app:icon="@drawable/baseline_chevron_right_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

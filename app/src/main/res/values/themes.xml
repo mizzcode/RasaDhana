@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.RasaDhana" parent="Theme.Material3.Light">
+    <style name="Theme.RasaDhana" parent="Theme.Material3.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>

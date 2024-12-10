@@ -9,7 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.rasadhana.data.Result
 import com.rasadhana.databinding.ActivityRegisterBinding
-import com.rasadhana.ui.login.LoginActivity
+import com.rasadhana.ui.otp.OtpActivity
 import org.koin.android.ext.android.inject
 
 class RegisterActivity : AppCompatActivity() {
@@ -50,13 +50,19 @@ class RegisterActivity : AppCompatActivity() {
 
                             if (result.data.success) {
                                 val response = result.data
+                                val otp = response.otp
+
+                                Log.d("RegisterActivity", "OTP: $otp")
+                                Log.d("RegisterActivity", "DATA: $response")
 
                                 showToast(response.message)
 
-                                val intent = Intent(this, LoginActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                val intent = Intent(this, OtpActivity::class.java)
+                                intent.putExtra(OtpActivity.EXTRA_EMAIL, email)
+                                intent.putExtra(OtpActivity.EXTRA_OTP, otp)
+                                intent.putExtra(OtpActivity.EXTRA_PASSWORD, password)
+                                intent.putExtra(OtpActivity.EXTRA_TYPE, OtpActivity.REGISTER)
                                 startActivity(intent)
-                                finish()
                             } else {
                                 showToast(result.data.message)
                             }

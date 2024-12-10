@@ -40,7 +40,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
             val forgotPasswordViewModel: ForgotPasswordViewModel by inject()
 
-            forgotPasswordViewModel.getOtp(email).observe(this) {result ->
+            forgotPasswordViewModel.getOtpForgotPassword(email).observe(this) { result ->
                 if (result != null) {
                     when (result) {
                         is Result.Error -> {
@@ -61,7 +61,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
                                 val intent = Intent(this@ForgotPasswordActivity, OtpActivity::class.java)
                                 intent.putExtra(EXTRA_EMAIL, email)
                                 intent.putExtra(EXTRA_OTP, otp)
-                                intent.putExtra(EXTRA_TYPE, "forgot_password")
+                                intent.putExtra(EXTRA_TYPE, OtpActivity.FORGOT_PASSWORD)
                                 startActivity(intent)
                             }
                         }

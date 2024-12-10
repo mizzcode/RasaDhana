@@ -4,5 +4,5 @@ import androidx.lifecycle.ViewModel
 import com.rasadhana.data.repository.UserRepository
 
 class ForgotPasswordViewModel(private val userRepository: UserRepository) : ViewModel() {
-    fun getOtp(email: String) = userRepository.getOtp(email)
+    fun getOtpForgotPassword(email: String) = userRepository.getOtpForgotPassword(email)
 }

@@ -62,4 +62,5 @@
     <string name="tflitevision_is_not_initialized_yet">TfLiteVision is not initialized yet</string>
     <string name="ingredients">Bahan - Bahan</string>
     <string name="how_to_make">Cara Membuat</string>
+    <string name="result_generate_recipe">Resep Telah Ditemukan\n%d Resep Ditemukan untuk %s</string>
 </resources>

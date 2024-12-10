@@ -13,6 +13,7 @@ import com.rasadhana.ui.forgotpassword.ForgotPasswordViewModel
 import com.rasadhana.ui.home.HomeViewModel
 import com.rasadhana.ui.login.LoginViewModel
 import com.rasadhana.ui.main.MainViewModel
+import com.rasadhana.ui.otp.OtpViewModel
 import com.rasadhana.ui.photo.PhotoViewModel
 import com.rasadhana.ui.register.RegisterViewModel
 import com.rasadhana.ui.splashscreen.SplashViewModel
@@ -33,12 +34,13 @@ val appModule = module {
     single { get<RasadhanaDatabase>().userDao() }
     single { get<RasadhanaDatabase>().recipeDao() }
     single { ApiConfig.getApiService() }
+    single { ApiConfig.getMlApiService() }
     single { UserPreference(dataStore = get()) }
-    single { RecipeRepository(apiService = get(), recipeDao = get()) }
+    single { RecipeRepository(apiService = get(), recipeDao = get(), mlApiService = get()) }
     single { UserRepository(apiService = get(), userPreference = get(), userDao = get())}
     single { UploadRepository(apiService = get()) }
 
-    viewModel { PhotoViewModel(get(), get()) }
+    viewModel { PhotoViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { RegisterViewModel(get()) }
     viewModel { HomeViewModel(get(), get()) }
@@ -46,4 +48,5 @@ val appModule = module {
     viewModel { SplashViewModel(get()) }
     viewModel { ForgotPasswordViewModel(get()) }
     viewModel { CreateNewPasswordViewModel(get()) }
+    viewModel { OtpViewModel(get()) }
 }
