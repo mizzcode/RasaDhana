@@ -42,8 +42,6 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        (requireActivity() as MainActivity).supportActionBar?.hide()
-
         homeViewModel.getSession().observe(viewLifecycleOwner) { user ->
             val name = user.name
             Log.d("HomeFragment", "User: $user")
@@ -59,15 +57,7 @@ class HomeFragment : Fragment() {
         val recipeSearchResultAdapter = RecipeSearchResultAdapter()
 
         homeViewModel.recipes.observe(viewLifecycleOwner) { recipes ->
-            if (recipes.isNullOrEmpty()) {
-                Log.d("SearchResults", "No results found.")
-            } else {
-                Log.d("SearchResults", "Results found: ${recipes.size}")
-                Log.d("SearchResults", "Results found: ${recipes.map { recipe ->
-                    recipe.name
-                }}")
-                recipeSearchResultAdapter.submitList(recipes)
-            }
+            recipeSearchResultAdapter.submitList(recipes)
         }
 
         binding.rvSearchResults.apply {
@@ -97,7 +87,6 @@ class HomeFragment : Fragment() {
                     handler.removeCallbacksAndMessages(null)
                     handler.postDelayed({
                         if (query.isNotEmpty()) {
-                            showToast(query)
                             homeViewModel.searchRecipes(query)
                         }
                     }, 500L)
@@ -106,7 +95,6 @@ class HomeFragment : Fragment() {
 
             searchView.editText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
-                    showToast(searchView.text.toString())
                     searchView.hide()
                     (requireActivity() as MainActivity).setBottomNavVisibility(true)
                 }
@@ -175,6 +163,5 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        (requireActivity() as MainActivity).supportActionBar?.show()
     }
 }

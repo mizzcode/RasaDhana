@@ -2,10 +2,7 @@ package com.rasadhana.data.remote.response
 
 import com.google.gson.annotations.SerializedName
 
-data class UserDataResponse(
-
-	@field:SerializedName("data")
-	val data: Data,
+data class UpdateUserResponse(
 
 	@field:SerializedName("success")
 	val success: Boolean,
@@ -13,14 +10,14 @@ data class UserDataResponse(
 	@field:SerializedName("message")
 	val message: String,
 
-	@field:SerializedName("expireToken")
-	val expireToken: String
+	@field:SerializedName("user")
+	val user: User
 )
 
-data class Data(
+data class User(
 
-	@field:SerializedName("password")
-	val password: String,
+	@field:SerializedName("photoUrl")
+	val photoUrl: String,
 
 	@field:SerializedName("name")
 	val name: String,
@@ -29,8 +26,5 @@ data class Data(
 	val id: String,
 
 	@field:SerializedName("email")
-	val email: String,
-
-	@field:SerializedName("photoUrl")
-	val photoUrl: String
+	val email: String
 )

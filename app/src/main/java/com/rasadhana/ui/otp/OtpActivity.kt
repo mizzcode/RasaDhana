@@ -45,6 +45,7 @@ class OtpActivity : AppCompatActivity() {
 
             binding.btnSent.setOnClickListener {
                 Log.d("OTP_CODE", "OTP: $currentOtp")
+                Log.d("OTP_CODE_FROM_SERVER", "OTP: $otpFromServer")
 
                 if (currentOtp == otpFromServer) {
                     when (type) {
@@ -55,13 +56,24 @@ class OtpActivity : AppCompatActivity() {
                         }
                         REGISTER -> {
                             Log.d("OTP REGISTER", "OTP: $currentOtp, $email, $password")
-                            val intent = Intent(this@OtpActivity, LoginActivity::class.java)
                             otpViewModel.userVerify(email.toString(), currentOtp).observe(this) { result ->
                                 if (result != null) {
                                     when (result) {
-                                        is Result.Error -> TODO()
-                                        Result.Loading -> TODO()
-                                        is Result.Success -> TODO()
+                                        is Result.Error -> {
+                                            showToast(result.error)
+                                        }
+                                        Result.Loading -> {}
+                                        is Result.Success -> {
+                                            if (result.data.success) {
+                                                Log.d("OTP REGISTER SUKSES", "${result.data}")
+                                                showToast(result.data.message)
+                                                val intent = Intent(this@OtpActivity, LoginActivity::class.java)
+                                                startActivity(intent)
+                                            } else {
+                                                showToast(result.data.message)
+                                                Log.d("OTP REGISTER FAILED", "${result.data}")
+                                            }
+                                        }
                                     }
                                 }
                             }

@@ -10,6 +10,9 @@ data class LoginResponse(
 	@field:SerializedName("message")
 	val message: String,
 
-	@field:SerializedName("data")
-	val data: String
+	@field:SerializedName("token")
+	val token: String,
+
+	@field:SerializedName("expireToken")
+	val expireToken: String
 )

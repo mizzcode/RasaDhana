@@ -63,4 +63,11 @@
     <string name="ingredients">Bahan - Bahan</string>
     <string name="how_to_make">Cara Membuat</string>
     <string name="result_generate_recipe">Resep Telah Ditemukan\n%d Resep Ditemukan untuk %s</string>
+    <string name="account">Account</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="user_who_want_to_logout">User yang ingin logout atau keluar dari aplikasi</string>
+    <string name="user_who_want_to_edit_profile">User yang ingin edit profile</string>
+    <string name="setting">Settings</string>
+    <string name="update_user">Simpan</string>
 </resources>

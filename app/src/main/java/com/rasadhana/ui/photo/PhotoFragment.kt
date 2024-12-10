@@ -3,6 +3,7 @@ package com.rasadhana.ui.photo
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -51,6 +52,7 @@ class PhotoFragment : Fragment() {
         _binding = FragmentPhotoBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        (requireActivity() as MainActivity).supportActionBar?.show()
         (requireActivity() as MainActivity).setBottomNavVisibility(false)
 
         return root
@@ -66,6 +68,7 @@ class PhotoFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.apply {
             title = getString(R.string.photo_ingredient)
             setDisplayHomeAsUpEnabled(true)
+            setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(), R.color.blue)))
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -90,13 +93,13 @@ class PhotoFragment : Fragment() {
                         is Result.Error -> {
                             showLoading(false)
                             showGenerateButton(true)
-                            showResultRecipes(false)
+                            showResultRecipesButton(false)
                             showToast(result.error)
                         }
                         Result.Loading -> {
                             showLoading(true)
                             showGenerateButton(true)
-                            showResultRecipes(false)
+                            showResultRecipesButton(false)
                         }
                         is Result.Success -> {
                             showLoading(false)
@@ -111,7 +114,7 @@ class PhotoFragment : Fragment() {
 
                             binding.resultGenerateRecipes.text = getString(R.string.result_generate_recipe, count, title)
 
-                            showResultRecipes(true)
+                            showResultRecipesButton(true)
 
                             Log.d("PhotoFragment", "Response: $response")
                         }
@@ -133,13 +136,13 @@ class PhotoFragment : Fragment() {
                             when (result) {
                                 is Result.Error -> {
                                     showGenerateButton(false)
-                                    showResultRecipes(false)
+                                    showResultRecipesButton(false)
                                     showLoading(false)
                                     showToast(result.error)
                                 }
                                 Result.Loading -> {
                                     showGenerateButton(false)
-                                    showResultRecipes(false)
+                                    showResultRecipesButton(false)
                                     showLoading(true)
                                 }
                                 is Result.Success -> {
@@ -149,7 +152,7 @@ class PhotoFragment : Fragment() {
                                         val response = result.data
                                         showToast(response.message)
                                         showGenerateButton(true)
-                                        showResultRecipes(false)
+                                        showResultRecipesButton(false)
                                         Log.d("PhotoFragment", "Response: $response")
                                     } else {
                                         showToast(result.data.message)
@@ -221,7 +224,7 @@ class PhotoFragment : Fragment() {
         binding.generateRecipeButton.visibility = if (visibility) View.VISIBLE else View.GONE
     }
 
-    private fun showResultRecipes(visibility: Boolean) {
+    private fun showResultRecipesButton(visibility: Boolean) {
         binding.resultGenerateRecipes.visibility = if (visibility) View.VISIBLE else View.GONE
     }
 
@@ -232,6 +235,7 @@ class PhotoFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        (requireActivity() as MainActivity).supportActionBar?.hide()
         (requireActivity() as MainActivity).setBottomNavVisibility(true)
     }
 }
