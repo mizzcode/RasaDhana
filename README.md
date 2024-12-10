@@ -20,7 +20,6 @@ RasaDhana is an innovative app that aims to help users utilize available food in
 - **Image Recognition**
 - **Recommended Recipes**
 - **Favorite Recipes**  
-- **Save leftover ingredients for later processing**  
 - **Setting Account**  
 
 ---
