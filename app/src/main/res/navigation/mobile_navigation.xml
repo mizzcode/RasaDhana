@@ -28,11 +28,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_kulkas"
-        android:name="com.rasadhana.ui.kulkas.KulkasFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_kulkas" />
-    <fragment
         android:id="@+id/navigation_account"
         android:name="com.rasadhana.ui.account.AccountFragment"
         android:label="@string/title_account"

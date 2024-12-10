@@ -45,7 +45,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_home,
                 R.id.navigation_favorite,
                 R.id.navigation_photo,
-                R.id.navigation_kulkas,
                 R.id.navigation_account
             )
         )

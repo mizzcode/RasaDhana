@@ -17,13 +17,7 @@
         android:title="@string/title_camera" />
 
     <item
-        android:id="@+id/navigation_kulkas"
-        android:icon="@drawable/kulkas"
-        android:title="@string/title_kulkas" />
-
-    <item
         android:id="@+id/navigation_account"
         android:icon="@drawable/baseline_manage_accounts_24"
         android:title="@string/title_account" />
-
 </menu>
