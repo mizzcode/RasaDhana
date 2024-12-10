@@ -54,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
 
                             if (result.data.success) {
                                 val response = result.data
-                                val token = response.data
+                                val token = response.token
 
                                 loginViewModel.getUserData(token).observe(this) { user ->
                                     if (user != null) {
@@ -69,8 +69,10 @@ class LoginActivity : AppCompatActivity() {
 
                                                 val id = user.data.id
                                                 val name = user.data.name
+                                                val photo = user.data.photoUrl
+                                                val expireToken = user.data.expireToken
 
-                                                loginViewModel.saveSession(UserModel(id, name, email, token, true)) // simpan session user
+                                                loginViewModel.saveSession(UserModel(id, name, email, token, true, photo, expireToken)) // simpan session user
 
                                                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                                                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK

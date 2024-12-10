@@ -13,4 +13,6 @@ class UserEntity (
     val name: String,
     val email: String,
     val password: String,
+    val photoUrl: String,
+    val expireToken: String
 )

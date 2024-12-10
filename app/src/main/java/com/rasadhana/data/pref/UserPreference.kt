@@ -21,6 +21,8 @@ class UserPreference(private val dataStore: DataStore<Preferences>) {
             preferences[EMAIL_KEY] = user.email
             preferences[TOKEN_KEY] = user.token
             preferences[IS_LOGIN_KEY] = user.isLogin
+            preferences[PHOTO_USER] = user.photo
+            preferences[EXPIRE_TOKEN] = user.expireToken
         }
     }
 
@@ -31,7 +33,9 @@ class UserPreference(private val dataStore: DataStore<Preferences>) {
                 preferences[NAME_KEY] ?: "",
                 preferences[EMAIL_KEY] ?: "",
                 preferences[TOKEN_KEY] ?: "",
-                preferences[IS_LOGIN_KEY] ?: false
+                preferences[IS_LOGIN_KEY] ?: false,
+                preferences[PHOTO_USER] ?: "",
+                preferences[EXPIRE_TOKEN] ?: ""
             )
         }
     }
@@ -48,5 +52,7 @@ class UserPreference(private val dataStore: DataStore<Preferences>) {
         private val EMAIL_KEY = stringPreferencesKey("email")
         private val TOKEN_KEY = stringPreferencesKey("token")
         private val IS_LOGIN_KEY = booleanPreferencesKey("isLogin")
+        private val PHOTO_USER = stringPreferencesKey("photo")
+        private val EXPIRE_TOKEN = stringPreferencesKey("expireToken")
     }
 }

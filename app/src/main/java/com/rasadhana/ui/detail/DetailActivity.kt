@@ -2,9 +2,11 @@ package com.rasadhana.ui.detail
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.WindowInsetsController
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -36,11 +38,22 @@ class DetailActivity : AppCompatActivity() {
 
         Log.d("DetailActivity", "Title: ${recipe?.name}, Image: ${recipe?.image}")
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // For Android 12 and above, use WindowInsetsController
+            window.insetsController?.setSystemBarsAppearance(
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            )
+            window.statusBarColor = ContextCompat.getColor(this, R.color.blue)
+        } else {
+            // For Android below Android 12, use the legacy method
+            window.statusBarColor = ContextCompat.getColor(this, R.color.blue)
+        }
+
         supportActionBar?.apply {
             setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@DetailActivity, R.color.blue)))
             setDisplayHomeAsUpEnabled(true)
             title = "Resep ${recipe?.name}"
-
         }
 
         val titleTextView = findViewById<TextView>(android.R.id.title)

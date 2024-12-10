@@ -14,6 +14,10 @@ import com.rasadhana.R
 import com.rasadhana.databinding.ActivityMainBinding
 import com.rasadhana.ui.login.LoginActivity
 import org.koin.android.ext.android.inject
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,11 +29,31 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.hide()
+
         val mainViewModel: MainViewModel by inject()
 
         mainViewModel.getSession().observe(this) { user ->
-            if (!user.isLogin) {
-                Toast.makeText(this, "Sesi habis silahkan login ulang", Toast.LENGTH_SHORT).show()
+            if (user.isLogin) {
+                val expireToken = user.expireToken
+
+                val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+                format.timeZone = TimeZone.getTimeZone("UTC")
+
+                try {
+                    val expireDate = format.parse(expireToken)
+                    val currentDate = Date()
+
+                    if (expireDate != null && expireDate.before(currentDate)) {
+                        Toast.makeText(this, "Sesi habis, silahkan login ulang", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, LoginActivity::class.java))
+                        finish()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "Error parsing expire token", Toast.LENGTH_SHORT).show()
+                }
+            } else {
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             }

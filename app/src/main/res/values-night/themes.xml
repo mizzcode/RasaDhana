@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.RasaDhana" parent="Theme.Material3.DayNight">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
@@ -10,7 +10,9 @@
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="titleTextColor">@color/white</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>

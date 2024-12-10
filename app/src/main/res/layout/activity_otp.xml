@@ -58,6 +58,7 @@
             app:OtpState_filled="true"
             android:inputType="number"
             app:OtpItemCount="5"
+            android:textColor="@color/design_default_color_on_secondary"
             android:layout_marginTop="40dp"
             app:OtpViewType="rectangle"
             app:OtpLineColor="@color/blue"

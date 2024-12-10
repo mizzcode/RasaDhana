@@ -105,4 +105,7 @@ dependencies {
 
     // datastore
     implementation(libs.androidx.datastore.preferences)
+
+    // image circle
+    implementation (libs.circleimageview)
 }
