@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.rasadhana.data.local.entity.RecipeEntity
 import com.rasadhana.data.local.entity.UserEntity
 
-@Database(entities = [UserEntity::class, RecipeEntity::class], version = 5, exportSchema = false)
+@Database(entities = [UserEntity::class, RecipeEntity::class], version = 6, exportSchema = false)
 abstract class RasadhanaDatabase : RoomDatabase(){
     abstract fun userDao(): UserDao
     abstract fun recipeDao(): RecipeDao

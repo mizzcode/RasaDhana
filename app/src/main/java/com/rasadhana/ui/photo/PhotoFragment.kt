@@ -26,6 +26,9 @@ import com.rasadhana.reduceFileImage
 import com.rasadhana.uriToFile
 import org.koin.android.ext.android.inject
 import com.rasadhana.data.Result
+import com.rasadhana.data.local.entity.RecipeEntity
+import com.rasadhana.ui.recommendation.RecommendationRecipesActivity
+import com.rasadhana.ui.recommendation.RecommendationRecipesActivity.Companion.EXTRA_RECIPES
 
 class PhotoFragment : Fragment() {
     private var _binding: FragmentPhotoBinding? = null
@@ -78,16 +81,11 @@ class PhotoFragment : Fragment() {
         binding.cameraButton.setOnClickListener { startCamera() }
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.generateRecipeButton.setOnClickListener { generateRecipe() }
-        binding.resultGenerateRecipes.setOnClickListener { moveToRecommendationRecipes() }
-    }
-
-    private fun moveToRecommendationRecipes() {
-//        val intent = Intent(requireContext(), RecommendationRecipes)
     }
 
     private fun generateRecipe() {
         photoViewModel.getSession().observe(viewLifecycleOwner) { user ->
-            photoViewModel.generateRecipe(user.id).observe(viewLifecycleOwner) { result ->
+            photoViewModel.generateRecipe(user.id, requireContext()).observe(viewLifecycleOwner) { result ->
                 if (result != null) {
                     when (result) {
                         is Result.Error -> {
@@ -107,14 +105,18 @@ class PhotoFragment : Fragment() {
 
                             val response = result.data
 
-                            val count = response.recipes.size
-                            val title = response.recipes.joinToString(", ") { it.title }
+                            val count = response.size
+                            val title = response.joinToString(", ") { it.name }
 
                             Log.d("title resep", title)
 
                             binding.resultGenerateRecipes.text = getString(R.string.result_generate_recipe, count, title)
 
                             showResultRecipesButton(true)
+
+                            binding.resultGenerateRecipes.setOnClickListener {
+                                moveToRecommendationRecipes(response)
+                            }
 
                             Log.d("PhotoFragment", "Response: $response")
                         }
@@ -210,6 +212,12 @@ class PhotoFragment : Fragment() {
         } else {
             photoViewModel.currentImageUri = null
         }
+    }
+
+    private fun moveToRecommendationRecipes(response: List<RecipeEntity>) {
+        val intent = Intent(requireContext(), RecommendationRecipesActivity::class.java)
+        intent.putParcelableArrayListExtra(EXTRA_RECIPES, ArrayList(response))
+        startActivity(intent)
     }
 
     private fun showLoading(isLoading: Boolean) {
