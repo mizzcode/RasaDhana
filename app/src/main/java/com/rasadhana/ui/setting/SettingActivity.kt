@@ -4,6 +4,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowInsetsController
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -11,7 +12,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.rasadhana.R
+import com.rasadhana.data.Result
+import com.rasadhana.data.pref.UserModel
 import com.rasadhana.databinding.ActivitySettingBinding
+import org.koin.android.ext.android.inject
 
 class SettingActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingBinding
@@ -26,6 +30,8 @@ class SettingActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        val settingViewModel: SettingViewModel by inject()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // For Android 12 and above, use WindowInsetsController
@@ -45,21 +51,54 @@ class SettingActivity : AppCompatActivity() {
             title = getString(R.string.setting)
         }
 
-        val photo = intent.getStringExtra(EXTRA_PHOTO)
-        val name = intent.getStringExtra(EXTRA_NAME)
-        val email = intent.getStringExtra(EXTRA_EMAIL)
+        val user = intent.getParcelableExtra<UserModel>(EXTRA_USER)
 
-        with(binding) {
-            Glide.with(this@SettingActivity)
-                .load(photo)
-                .error(R.drawable.baseline_account_box_24)
-                .into(profileImage)
+        if (user != null) {
+            with(binding) {
+                Glide.with(this@SettingActivity)
+                    .load(user.photo)
+                    .error(R.drawable.baseline_account_box_24)
+                    .into(profileImage)
 
-            edtName.setText(name)
-            edtEmail.setText(email)
+                edtName.setText(user.name)
+                edtEmail.setText(user.email)
 
-            edtEmail.isEnabled = false
+                edtEmail.isEnabled = false
+
+                btnUpdateUser.setOnClickListener {
+                    settingViewModel.updateUser(null, edtName.text.toString(), user.id).observe(this@SettingActivity) { result ->
+                            if (result != null) {
+                                when (result) {
+                                    is Result.Error -> {
+                                        showToast(result.error)
+                                    }
+                                    Result.Loading -> {}
+                                    is Result.Success -> {
+                                        settingViewModel.saveSession(
+                                            UserModel(
+                                                user.id,
+                                                edtName.text.toString(),
+                                                user.email,
+                                                user.token,
+                                                true,
+                                                user.photo,
+                                                user.expireToken
+                                            )
+                                        )
+                                        showToast(result.data.message)
+                                        finish()
+                                    }
+                                }
+                            }
+                        }
+                }
+            }
         }
+
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -68,8 +107,6 @@ class SettingActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val EXTRA_PHOTO = "extra_photo"
-        const val EXTRA_NAME = "extra_name"
-        const val EXTRA_EMAIL = "extra_email"
+        const val EXTRA_USER = "extra_user"
     }
 }

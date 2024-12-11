@@ -11,9 +11,7 @@ import com.bumptech.glide.Glide
 import com.rasadhana.R
 import com.rasadhana.databinding.FragmentAccountBinding
 import com.rasadhana.ui.setting.SettingActivity
-import com.rasadhana.ui.setting.SettingActivity.Companion.EXTRA_EMAIL
-import com.rasadhana.ui.setting.SettingActivity.Companion.EXTRA_NAME
-import com.rasadhana.ui.setting.SettingActivity.Companion.EXTRA_PHOTO
+import com.rasadhana.ui.setting.SettingActivity.Companion.EXTRA_USER
 import org.koin.android.ext.android.inject
 
 class AccountFragment : Fragment() {
@@ -52,9 +50,7 @@ class AccountFragment : Fragment() {
 
                 tvSettings.setOnClickListener {
                     val intent = Intent(requireContext(), SettingActivity::class.java)
-                    intent.putExtra(EXTRA_PHOTO, user.photo)
-                    intent.putExtra(EXTRA_NAME, user.name)
-                    intent.putExtra(EXTRA_EMAIL, user.email)
+                    intent.putExtra(EXTRA_USER, user)
                     startActivity(intent)
                 }
 
