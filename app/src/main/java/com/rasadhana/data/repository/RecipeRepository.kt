@@ -1,22 +1,21 @@
 package com.rasadhana.data.repository
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import com.rasadhana.R
 import com.rasadhana.data.Result
 import com.rasadhana.data.local.entity.RecipeEntity
 import com.rasadhana.data.local.room.RecipeDao
-import com.rasadhana.data.remote.response.RecipeResponse
 import com.rasadhana.data.remote.retrofit.ApiService
 import com.rasadhana.data.remote.retrofit.MlApiService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
 class RecipeRepository(
     private val apiService: ApiService,
     private val recipeDao: RecipeDao,
-    private val mlApiService: MlApiService
+    private val mlApiService: MlApiService,
 ) {
 
     fun searchRecipes(query: String): LiveData<List<RecipeEntity>>  {
@@ -26,57 +25,77 @@ class RecipeRepository(
     fun getAllRecipe(): LiveData<Result<List<RecipeEntity>>> = liveData {
         emit(Result.Loading)
 
-        val localDataRecipes = recipeDao.getAllRecipe()
-
-        if (localDataRecipes.isNotEmpty()) {
-            Log.d("RecipeRepository", "getAllRecipe: $localDataRecipes")
-            emit(Result.Success(localDataRecipes))
-            return@liveData
-        }
-
         try {
             val response = apiService.getAllRecipe()
+            Log.d("RecipeRepository", "Fetched recipes from API: ${response.recipes}")
 
-            Log.d("response", response.toString())
-
-            val recipes = response.recipes
-
-            withContext(Dispatchers.IO) {
-                val data = recipes.map { recipe ->
-                    RecipeEntity(
-                        name = recipe.title,
-                        image = recipe.recipeImage,
-                        ingredients = recipe.ingredients,
-                        howToMake = recipe.steps,
-                    )
-                }
-                recipeDao.insertRecipes(data)
+            val recipes = response.recipes.map { recipe ->
+                RecipeEntity(
+                    name = recipe.title,
+                    image = recipe.recipeImage,
+                    ingredients = recipe.ingredients,
+                    howToMake = recipe.steps,
+                    isFavorite = false,
+                    isRecommendation = false
+                )
             }
+            recipeDao.insertRecipes(recipes)
+
         } catch (e: HttpException) {
-            val errorMessage = "Oops! Something went wrong. Please try again later."
+            val errorMessage = e.message ?: "Oops! Something went wrong. Please try again later."
+            Log.e("RecipeRepository", "HttpException: $errorMessage")
             emit(Result.Error(errorMessage))
+            return@liveData
         } catch (e: Exception) {
-            emit(Result.Error("Unable to complete the request. Please check your connection and try again."))
+            val errorMessage = "Please check your connection and try again."
+            Log.e("RecipeRepository", "Exception: $errorMessage", e)
+            emit(Result.Error(errorMessage))
+            return@liveData
         }
 
         val localData = recipeDao.getAllRecipe()
         emit(Result.Success(localData))
     }
 
-    fun generateRecipe(userId: String): LiveData<Result<RecipeResponse>> = liveData {
+
+    fun generateRecipe(userId: String, context: Context): LiveData<Result<List<RecipeEntity>>> = liveData {
         emit(Result.Loading)
 
         try {
             val response = mlApiService.generateRecipes(userId)
 
-            Log.d("response", response.toString())
+            val recipes = response.recipes
 
-            emit(Result.Success(response))
+            val data = recipes.map { recipe ->
+
+                RecipeEntity(
+                    name = recipe.title,
+                    image = "android.resource://${context.packageName}/${R.drawable.image_wings}",
+                    ingredients = recipe.ingredients,
+                    howToMake = recipe.steps,
+                    isFavorite = false,
+                    isRecommendation = false
+                )
+            }
+
+            Log.d("response", response.toString())
+            Log.d("recipes", recipes.toString())
+
+            emit(Result.Success(data))
         } catch (e: HttpException) {
             val errorMessage = "Oops! Something went wrong. Please try again later."
             emit(Result.Error(errorMessage))
         } catch (e: Exception) {
-            emit(Result.Error("Unable to complete the request. Please check your connection and try again."))
+            emit(Result.Error("Please check your connection and try again."))
         }
+    }
+
+    fun getRecipesFavorite(): LiveData<List<RecipeEntity>> {
+        return recipeDao.getRecipesFavorite()
+    }
+
+    suspend fun setRecipeFavorite(recipe: RecipeEntity, favoriteState: Boolean) {
+        recipe.isFavorite = favoriteState
+        recipeDao.updateRecipe(recipe)
     }
 }
