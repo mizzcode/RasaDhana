@@ -1,5 +1,6 @@
 package com.rasadhana.data.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
@@ -130,6 +131,9 @@ class UserRepository(private val apiService: ApiService, private val userPrefere
             val requestImageFile = it.asRequestBody("image/jpeg".toMediaType())
             MultipartBody.Part.createFormData("photo", it.name, requestImageFile)
         }
+
+        Log.d("file profile", multipartBody.toString())
+        imageFile?.let { Log.d("file profile", it.name) }
 
         try {
             val successResponse = apiService.updateUserData(multipartBody, requestBody, userId)
