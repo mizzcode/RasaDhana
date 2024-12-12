@@ -1,11 +1,16 @@
 package com.rasadhana.ui.setting
 
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.view.WindowInsetsController
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -15,10 +20,14 @@ import com.rasadhana.R
 import com.rasadhana.data.Result
 import com.rasadhana.data.pref.UserModel
 import com.rasadhana.databinding.ActivitySettingBinding
+import com.rasadhana.reduceFileImage
+import com.rasadhana.uriToFile
 import org.koin.android.ext.android.inject
 
 class SettingActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingBinding
+
+    private val settingViewModel: SettingViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +39,7 @@ class SettingActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        val settingViewModel: SettingViewModel by inject()
-
+        
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // For Android 12 and above, use WindowInsetsController
             window.insetsController?.setSystemBarsAppearance(
@@ -65,36 +72,75 @@ class SettingActivity : AppCompatActivity() {
 
                 edtEmail.isEnabled = false
 
+                fabEditProfile.setOnClickListener {
+                    startGallery()
+                }
+
                 btnUpdateUser.setOnClickListener {
-                    settingViewModel.updateUser(null, edtName.text.toString(), user.id).observe(this@SettingActivity) { result ->
-                            if (result != null) {
-                                when (result) {
-                                    is Result.Error -> {
-                                        showToast(result.error)
-                                    }
-                                    Result.Loading -> {}
-                                    is Result.Success -> {
-                                        settingViewModel.saveSession(
-                                            UserModel(
-                                                user.id,
-                                                edtName.text.toString(),
-                                                user.email,
-                                                user.token,
-                                                true,
-                                                user.photo,
-                                                user.expireToken
-                                            )
+                    val imageFile = settingViewModel.currentImageUri?.let { uri ->
+                        uriToFile(uri, this@SettingActivity).reduceFileImage()
+                    }
+
+                    settingViewModel.updateUser(imageFile, edtName.text.toString(), user.id).observe(this@SettingActivity) { result ->
+                        if (result != null) {
+                            when (result) {
+                                is Result.Error -> {
+                                    showToast(result.error)
+                                    showLoading(false)
+                                }
+                                Result.Loading -> showLoading(true)
+                                is Result.Success -> {
+                                    showLoading(false)
+
+                                    val data = result.data
+
+                                    settingViewModel.saveSession(
+                                        UserModel(
+                                            user.id,
+                                            data.user.name,
+                                            user.email,
+                                            user.token,
+                                            true,
+                                            data.user.photoUrl,
+                                            user.expireToken
                                         )
-                                        showToast(result.data.message)
-                                        finish()
-                                    }
+                                    )
+
+                                    showToast(result.data.message)
+                                    finish()
                                 }
                             }
                         }
+                    }
                 }
             }
         }
+    }
 
+    private fun startGallery() {
+        launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private val launcherGallery = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            settingViewModel.currentImageUri = uri
+            showImage()
+        } else {
+            Log.d("Photo Picker", "No media selected")
+        }
+    }
+
+    private fun showImage() {
+        settingViewModel.currentImageUri?.let {
+            Log.d("Image URI", "showImage: $it")
+            binding.profileImage.setImageURI(it)
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     private fun showToast(message: String) {

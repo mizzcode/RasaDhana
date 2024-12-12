@@ -71,4 +71,5 @@
     <string name="setting">Settings</string>
     <string name="update_user">Simpan</string>
     <string name="recipe_favorite">Resep Makanan Favorit Kamu</string>
+    <string name="edit_image_profile">Edit Gambar Profile</string>
 </resources>
