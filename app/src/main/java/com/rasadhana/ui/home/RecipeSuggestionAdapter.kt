@@ -3,7 +3,6 @@ package com.rasadhana.ui.home
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
@@ -18,7 +17,7 @@ import com.rasadhana.databinding.ItemColRecipeMaybeYouLikeItBinding
 import com.rasadhana.ui.detail.DetailActivity
 import com.rasadhana.ui.detail.DetailActivity.Companion.EXTRA_RECIPE
 
-class RecipeSuggestionAdapter : ListAdapter<RecipeEntity, RecipeSuggestionAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class RecipeSuggestionAdapter(private val onFabClicked: (RecipeEntity) -> Unit) : ListAdapter<RecipeEntity, RecipeSuggestionAdapter.MyViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding = ItemColRecipeMaybeYouLikeItBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyViewHolder(binding)
@@ -26,14 +25,13 @@ class RecipeSuggestionAdapter : ListAdapter<RecipeEntity, RecipeSuggestionAdapte
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val recipe = getItem(position)
-        holder.bind(recipe)
+        holder.bind(recipe, onFabClicked)
     }
 
     class MyViewHolder(
         private val binding: ItemColRecipeMaybeYouLikeItBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(recipe: RecipeEntity) {
-            Log.d("RecipeSuggestionAdapter", "Binding recipe: ${recipe.name} | Gambar: ${recipe.image}")
+        fun bind(recipe: RecipeEntity, onFabClicked: (RecipeEntity) -> Unit) {
             binding.tvNameRecipe.text = recipe.name
             Glide.with(itemView.context)
                 .load(recipe.image)
@@ -50,13 +48,21 @@ class RecipeSuggestionAdapter : ListAdapter<RecipeEntity, RecipeSuggestionAdapte
                         itemView.context as Activity
                     ).toBundle())
             }
+
+            binding.floatingActionButton.setImageResource(if (recipe.isFavorite) R.drawable.baseline_favorite_24 else R.drawable.baseline_favorite_border_24)
+
+            binding.floatingActionButton.setOnClickListener {
+                binding.floatingActionButton.setImageResource(if (recipe.isFavorite) R.drawable.baseline_favorite_border_24 else R.drawable.baseline_favorite_24)
+
+                onFabClicked(recipe)
+            }
         }
     }
 
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<RecipeEntity>() {
             override fun areItemsTheSame(oldItem: RecipeEntity, newItem: RecipeEntity): Boolean {
-                return oldItem == newItem
+                return oldItem.name == newItem.name
             }
             @SuppressLint("DiffUtilEquals")
             override fun areContentsTheSame(oldItem: RecipeEntity, newItem: RecipeEntity): Boolean {

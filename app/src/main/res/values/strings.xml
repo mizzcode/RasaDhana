@@ -70,4 +70,5 @@
     <string name="user_who_want_to_edit_profile">User yang ingin edit profile</string>
     <string name="setting">Settings</string>
     <string name="update_user">Simpan</string>
+    <string name="recipe_favorite">Resep Makanan Favorit Kamu</string>
 </resources>

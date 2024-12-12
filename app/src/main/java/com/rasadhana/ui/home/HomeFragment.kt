@@ -122,7 +122,27 @@ class HomeFragment : Fragment() {
             }
         }
 
-        val recipeSuggestionAdapter = RecipeSuggestionAdapter()
+        val recipeSuggestionAdapter = RecipeSuggestionAdapter { recipe ->
+            if (recipe.isFavorite) {
+                homeViewModel.deleteRecipeFromFavorite(recipe)
+                showToast("${recipe.name} removed from favorites!")
+
+            } else {
+                homeViewModel.saveRecipeToFavorite(recipe)
+                showToast("${recipe.name} added to favorites!")
+            }
+        }
+
+        val recipeHistoryAdapter = RecipeHistoryAdapter { recipe ->
+            if (recipe.isFavorite) {
+                homeViewModel.deleteRecipeFromFavorite(recipe)
+                showToast("${recipe.name} removed from favorites!")
+
+            } else {
+                homeViewModel.saveRecipeToFavorite(recipe)
+                showToast("${recipe.name} added to favorites!")
+            }
+        }
 
         homeViewModel.getAllRecipe().observe(viewLifecycleOwner) { result ->
             if (result != null) {
@@ -137,9 +157,26 @@ class HomeFragment : Fragment() {
 
                         val listOfData = result.data
 
-                        Log.d("HomeFragment", "List of Data: $listOfData")
-
                         recipeSuggestionAdapter.submitList(listOfData)
+                    }
+                }
+            }
+        }
+
+        homeViewModel.getHistoryRecommendationRecipes().observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                when (result) {
+                    is Result.Error -> {
+                        showLoading(false)
+                        showToast(result.error)
+                    }
+                    Result.Loading -> showLoading(true)
+                    is Result.Success -> {
+                        showLoading(false)
+
+                        val listOfData = result.data
+
+                        recipeHistoryAdapter.submitList(listOfData)
                     }
                 }
             }
@@ -149,6 +186,12 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
             adapter = recipeSuggestionAdapter
+        }
+
+        binding.rvRecipeHistory.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+            adapter = recipeHistoryAdapter
         }
     }
 

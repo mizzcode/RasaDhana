@@ -33,7 +33,7 @@
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:menu="@menu/bottom_nav_menu"
             app:labelVisibilityMode="unlabeled"
             android:background="@color/blue"

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.WindowInsetsController
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.rasadhana.R
 import com.rasadhana.data.local.entity.RecipeEntity
 import com.rasadhana.databinding.ActivityRecommendationRecipesBinding
+import org.koin.android.ext.android.inject
 
 class RecommendationRecipesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecommendationRecipesBinding
@@ -52,8 +54,20 @@ class RecommendationRecipesActivity : AppCompatActivity() {
 
         val recipes: ArrayList<RecipeEntity>? = intent.getParcelableArrayListExtra(EXTRA_RECIPES)
 
+        val recommendationViewModel: RecommendationViewModel by inject()
+
         if (recipes != null) {
-            val adapter = RecommendationRecipesAdapter()
+            val adapter = RecommendationRecipesAdapter { recipe ->
+                if (recipe.isFavorite) {
+                    recommendationViewModel.deleteRecipeFromFavorite(recipe)
+                    showToast("${recipe.name} removed from favorites!")
+
+                } else {
+                    recommendationViewModel.saveRecipeToFavorite(recipe)
+                    showToast("${recipe.name} added to favorites!")
+                }
+            }
+
             adapter.submitList(recipes)
 
             binding.rvRecommendationRecipes.apply {
@@ -65,6 +79,10 @@ class RecommendationRecipesActivity : AppCompatActivity() {
             Log.d("RecommendationRecipes", "No recipes received from intent.")
         }
 
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
     override fun onSupportNavigateUp(): Boolean {

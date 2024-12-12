@@ -15,5 +15,5 @@ class RecipeEntity (
     val howToMake: String,
     val ingredients: String,
     var isFavorite: Boolean = false,
-    var isRecommendation: Boolean = false
+    var isFromRecommendation: Boolean = false
 ) : Parcelable

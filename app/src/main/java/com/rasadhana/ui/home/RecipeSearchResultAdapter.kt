@@ -2,7 +2,6 @@ package com.rasadhana.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
@@ -28,11 +27,9 @@ class RecipeSearchResultAdapter : ListAdapter<RecipeEntity, RecipeSearchResultAd
         private val binding: ItemRowRecipeSearchResultBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(recipe: RecipeEntity) {
-            Log.d("RecipeSearchResult", "Binding recipe: ${recipe.name} | Gambar: ${recipe.image}")
             binding.tvNameRecipe.text = recipe.name
 
             itemView.setOnClickListener {
-                Log.d("RecipeSearchResult", "Item clicked: ${recipe.name}")
                 val context = itemView.context
                 val intent = Intent(context, DetailActivity::class.java).apply {
                     putExtra(DetailActivity.EXTRA_RECIPE, recipe)
@@ -52,7 +49,7 @@ class RecipeSearchResultAdapter : ListAdapter<RecipeEntity, RecipeSearchResultAd
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<RecipeEntity>() {
             override fun areItemsTheSame(oldItem: RecipeEntity, newItem: RecipeEntity): Boolean {
-                return oldItem == newItem
+                return oldItem.name == newItem.name
             }
             @SuppressLint("DiffUtilEquals")
             override fun areContentsTheSame(oldItem: RecipeEntity, newItem: RecipeEntity): Boolean {
