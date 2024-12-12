@@ -3,7 +3,6 @@ package com.rasadhana.ui.recommendation
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
@@ -33,7 +32,6 @@ class RecommendationRecipesAdapter(private val onFabClicked: (RecipeEntity) -> U
         private val binding: ItemRowRecommendationRecipesBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(recipe: RecipeEntity, onFabClicked: (RecipeEntity) -> Unit) {
-            Log.d("RecommendRecipesAdapter", "Binding recipe: ${recipe.name} | Gambar: ${recipe.image}")
             binding.tvNameRecipe.text = recipe.name
             Glide.with(itemView.context)
                 .load(recipe.image)
