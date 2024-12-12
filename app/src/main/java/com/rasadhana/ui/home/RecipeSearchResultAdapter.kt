@@ -52,7 +52,7 @@ class RecipeSearchResultAdapter : ListAdapter<RecipeEntity, RecipeSearchResultAd
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<RecipeEntity>() {
             override fun areItemsTheSame(oldItem: RecipeEntity, newItem: RecipeEntity): Boolean {
-                return oldItem == newItem
+                return oldItem.name == newItem.name
             }
             @SuppressLint("DiffUtilEquals")
             override fun areContentsTheSame(oldItem: RecipeEntity, newItem: RecipeEntity): Boolean {

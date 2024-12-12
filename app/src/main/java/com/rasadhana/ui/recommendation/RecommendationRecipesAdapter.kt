@@ -18,7 +18,7 @@ import com.rasadhana.databinding.ItemRowRecommendationRecipesBinding
 import com.rasadhana.ui.detail.DetailActivity
 import com.rasadhana.ui.detail.DetailActivity.Companion.EXTRA_RECIPE
 
-class RecommendationRecipesAdapter : ListAdapter<RecipeEntity, RecommendationRecipesAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class RecommendationRecipesAdapter(private val onFabClicked: (RecipeEntity) -> Unit) : ListAdapter<RecipeEntity, RecommendationRecipesAdapter.MyViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding = ItemRowRecommendationRecipesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyViewHolder(binding)
@@ -26,13 +26,13 @@ class RecommendationRecipesAdapter : ListAdapter<RecipeEntity, RecommendationRec
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val recipe = getItem(position)
-        holder.bind(recipe)
+        holder.bind(recipe, onFabClicked)
     }
 
     class MyViewHolder(
         private val binding: ItemRowRecommendationRecipesBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(recipe: RecipeEntity) {
+        fun bind(recipe: RecipeEntity, onFabClicked: (RecipeEntity) -> Unit) {
             Log.d("RecommendRecipesAdapter", "Binding recipe: ${recipe.name} | Gambar: ${recipe.image}")
             binding.tvNameRecipe.text = recipe.name
             Glide.with(itemView.context)
@@ -49,6 +49,14 @@ class RecommendationRecipesAdapter : ListAdapter<RecipeEntity, RecommendationRec
                     ActivityOptionsCompat.makeSceneTransitionAnimation(
                         itemView.context as Activity
                     ).toBundle())
+            }
+
+            binding.floatingActionButton.setImageResource(if (recipe.isFavorite) R.drawable.baseline_favorite_24 else R.drawable.baseline_favorite_border_24)
+
+            binding.floatingActionButton.setOnClickListener {
+                binding.floatingActionButton.setImageResource(if (recipe.isFavorite) R.drawable.baseline_favorite_border_24 else R.drawable.baseline_favorite_24)
+
+                onFabClicked(recipe)
             }
         }
     }

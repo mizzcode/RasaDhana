@@ -9,6 +9,7 @@ import com.rasadhana.data.repository.RecipeRepository
 import com.rasadhana.data.repository.UploadRepository
 import com.rasadhana.data.repository.UserRepository
 import com.rasadhana.ui.account.AccountViewModel
+import com.rasadhana.ui.favorite.FavoriteViewModel
 import com.rasadhana.ui.forgotpassword.CreateNewPasswordViewModel
 import com.rasadhana.ui.forgotpassword.ForgotPasswordViewModel
 import com.rasadhana.ui.home.HomeViewModel
@@ -16,6 +17,7 @@ import com.rasadhana.ui.login.LoginViewModel
 import com.rasadhana.ui.main.MainViewModel
 import com.rasadhana.ui.otp.OtpViewModel
 import com.rasadhana.ui.photo.PhotoViewModel
+import com.rasadhana.ui.recommendation.RecommendationViewModel
 import com.rasadhana.ui.register.RegisterViewModel
 import com.rasadhana.ui.setting.SettingViewModel
 import com.rasadhana.ui.splashscreen.SplashViewModel
@@ -53,4 +55,6 @@ val appModule = module {
     viewModel { OtpViewModel(get()) }
     viewModel { AccountViewModel(get()) }
     viewModel { SettingViewModel(get()) }
+    viewModel { FavoriteViewModel(get()) }
+    viewModel { RecommendationViewModel(get()) }
 }
