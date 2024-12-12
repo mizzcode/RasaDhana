@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.rasadhana.R
 import com.rasadhana.databinding.FragmentAccountBinding
@@ -33,8 +32,8 @@ class AccountFragment : Fragment() {
         return root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onResume() {
+        super.onResume()
 
         accountViewModel.getSession().observe(viewLifecycleOwner) { user ->
 
@@ -47,7 +46,6 @@ class AccountFragment : Fragment() {
                     .error(R.drawable.baseline_account_box_24)
                     .into(profileImage)
 
-
                 tvSettings.setOnClickListener {
                     val intent = Intent(requireContext(), SettingActivity::class.java)
                     intent.putExtra(EXTRA_USER, user)
@@ -57,10 +55,6 @@ class AccountFragment : Fragment() {
                 tvLogout.setOnClickListener { accountViewModel.logout(requireContext()) }
             }
         }
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
     override fun onDestroyView() {

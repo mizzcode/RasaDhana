@@ -42,13 +42,17 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         homeViewModel.getSession().observe(viewLifecycleOwner) { user ->
             val name = user.name
             Log.d("HomeFragment", "User: $user")
             binding.tvUser.text = getString(R.string.greeting, name)
         }
-
-        return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
