@@ -206,6 +206,7 @@
             app:icon="@drawable/logo_google"
             app:iconSize="26dp"
             app:iconPadding="10dp"
+            android:visibility="gone"
             android:paddingVertical="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
