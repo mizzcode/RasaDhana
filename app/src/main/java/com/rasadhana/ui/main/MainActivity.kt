@@ -2,17 +2,24 @@ package com.rasadhana.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.credentials.ClearCredentialStateRequest
+import androidx.credentials.CredentialManager
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.rasadhana.R
 import com.rasadhana.databinding.ActivityMainBinding
 import com.rasadhana.ui.login.LoginActivity
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -54,30 +61,50 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         mainViewModel.getSession().observe(this) { user ->
-            if (user.isLogin) {
-                val expireToken = user.expireToken
+            if (!user.isLogin || isSessionExpired(user.expireToken)) {
 
-                val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-                format.timeZone = TimeZone.getTimeZone("UTC")
+                if (user.authType == "firebase") {
+                    // logout firebase signIn with google
+                    Firebase.auth.signOut()
+                    Log.d("Logout", "Firebase sign-out successful")
 
-                try {
-                    val expireDate = format.parse(expireToken)
-                    val currentDate = Date()
-
-                    if (expireDate != null && expireDate.before(currentDate)) {
-                        Toast.makeText(this, "Sesi habis, silahkan login ulang", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this, LoginActivity::class.java))
-                        finish()
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Toast.makeText(this, "Error parsing expire token", Toast.LENGTH_SHORT).show()
+                    // Hapus kredensial aktif firebase
+                    clearCredentialState()
                 }
-            } else {
-                startActivity(Intent(this, LoginActivity::class.java))
-                finish()
+
+                navigateToLogin()
+
+                Toast.makeText(this, "Sesi habis, silahkan login ulang", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun clearCredentialState() {
+        val credentialManager = CredentialManager.create(this)
+
+        // Hapus sesi kredensial
+        lifecycleScope.launch {
+            try {
+                credentialManager.clearCredentialState(ClearCredentialStateRequest())
+                Log.d("Logout", "Credential state cleared successfully")
+            } catch (e: Exception) {
+                Log.e("Logout", "Failed to clear credential state: ${e.message}")
+            }
+        }
+    }
+
+    private fun isSessionExpired(expireToken: String): Boolean {
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        format.timeZone = TimeZone.getTimeZone("UTC")
+        val expireDate = format.parse(expireToken)
+        val currentDate = Date()
+        return expireDate?.before(currentDate) ?: true
+    }
+
+    private fun navigateToLogin() {
+        startActivity(Intent(this, LoginActivity::class.java))
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {

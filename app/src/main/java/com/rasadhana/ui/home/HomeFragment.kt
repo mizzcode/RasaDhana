@@ -1,5 +1,6 @@
 package com.rasadhana.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
 import android.os.Handler
@@ -19,8 +20,13 @@ import com.google.android.material.search.SearchView.TransitionState
 import com.rasadhana.R
 import com.rasadhana.data.Result
 import com.rasadhana.databinding.FragmentHomeBinding
+import com.rasadhana.ui.login.LoginActivity
 import com.rasadhana.ui.main.MainActivity
 import org.koin.android.ext.android.inject
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class HomeFragment : Fragment() {
 
@@ -42,17 +48,13 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        return root
-    }
-
-    override fun onResume() {
-        super.onResume()
-
         homeViewModel.getSession().observe(viewLifecycleOwner) { user ->
             val name = user.name
             Log.d("HomeFragment", "User: $user")
             binding.tvUser.text = getString(R.string.greeting, name)
         }
+
+        return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
