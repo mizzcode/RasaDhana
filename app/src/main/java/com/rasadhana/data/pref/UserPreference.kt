@@ -9,33 +9,36 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import com.rasadhana.data.local.entity.UserEntity
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "session")
 
 class UserPreference(private val dataStore: DataStore<Preferences>) {
 
-    suspend fun saveSession(user: UserModel) {
+    suspend fun saveSession(user: UserEntity) {
         dataStore.edit { preferences ->
             preferences[ID_KEY] = user.id
             preferences[NAME_KEY] = user.name
             preferences[EMAIL_KEY] = user.email
             preferences[TOKEN_KEY] = user.token
             preferences[IS_LOGIN_KEY] = user.isLogin
-            preferences[PHOTO_USER] = user.photo
+            preferences[PHOTO_USER] = user.photoUrl
             preferences[EXPIRE_TOKEN] = user.expireToken
+            preferences[AUTH_TYPE] = user.authType
         }
     }
 
-    fun getSession(): Flow<UserModel> {
+    fun getSession(): Flow<UserEntity> {
         return dataStore.data.map { preferences ->
-            UserModel(
-                preferences[ID_KEY] ?: "",
-                preferences[NAME_KEY] ?: "",
-                preferences[EMAIL_KEY] ?: "",
-                preferences[TOKEN_KEY] ?: "",
-                preferences[IS_LOGIN_KEY] ?: false,
-                preferences[PHOTO_USER] ?: "",
-                preferences[EXPIRE_TOKEN] ?: ""
+            UserEntity(
+                id = preferences[ID_KEY] ?: "",
+                name = preferences[NAME_KEY] ?: "",
+                email = preferences[EMAIL_KEY] ?: "",
+                token = preferences[TOKEN_KEY] ?: "",
+                isLogin = preferences[IS_LOGIN_KEY] ?: false,
+                photoUrl = preferences[PHOTO_USER] ?: "",
+                expireToken = preferences[EXPIRE_TOKEN] ?: "",
+                authType = preferences[AUTH_TYPE] ?: "nodejs"
             )
         }
     }
@@ -54,5 +57,6 @@ class UserPreference(private val dataStore: DataStore<Preferences>) {
         private val IS_LOGIN_KEY = booleanPreferencesKey("isLogin")
         private val PHOTO_USER = stringPreferencesKey("photo")
         private val EXPIRE_TOKEN = stringPreferencesKey("expireToken")
+        private val AUTH_TYPE = stringPreferencesKey("authType")
     }
 }

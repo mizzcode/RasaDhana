@@ -16,9 +16,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.rasadhana.R
 import com.rasadhana.data.Result
-import com.rasadhana.data.pref.UserModel
+import com.rasadhana.data.local.entity.UserEntity
 import com.rasadhana.databinding.ActivitySettingBinding
 import com.rasadhana.reduceFileImage
 import com.rasadhana.uriToFile
@@ -58,14 +61,37 @@ class SettingActivity : AppCompatActivity() {
             title = getString(R.string.setting)
         }
 
-        val user = intent.getParcelableExtra<UserModel>(EXTRA_USER)
+        val user = intent.getParcelableExtra<UserEntity>(EXTRA_USER)
+
+        if (user != null) {
+            Log.d("userSetting", user.name)
+            Log.d("userSetting", user.photoUrl)
+            Log.d("userSetting", user.email)
+            Log.d("userSetting", user.isLogin.toString())
+        }
 
         if (user != null) {
             with(binding) {
-                Glide.with(this@SettingActivity)
-                    .load(user.photo)
-                    .error(R.drawable.baseline_account_box_24)
-                    .into(profileImage)
+
+                val uri = try {
+                    Uri.parse(user.photoUrl)
+                } catch (e: Exception) {
+                    null
+                }
+
+                if (uri != null && ("content" == uri.scheme || "file" == uri.scheme)) {
+                    Log.d("accountFragment", "MASUK KE URI ACCOUNT $uri")
+                    Glide.with(this@SettingActivity)
+                        .load(uri)
+                        .error(R.drawable.baseline_account_box_24)
+                        .into(profileImage)
+                } else {
+                    Log.d("accountFragment", "MASUK BUKAN URI")
+                    Glide.with(this@SettingActivity)
+                        .load(user.photoUrl)
+                        .error(R.drawable.baseline_account_box_24)
+                        .into(profileImage)
+                }
 
                 edtName.setText(user.name)
                 edtEmail.setText(user.email)
@@ -77,12 +103,58 @@ class SettingActivity : AppCompatActivity() {
                 }
 
                 btnUpdateUser.setOnClickListener {
-                    val imageFile = settingViewModel.currentImageUri?.let { uri ->
-                        uriToFile(uri, this@SettingActivity).reduceFileImage()
+                    val name = edtName.text.toString()
+
+                    if (name.isBlank()) {
+                        showToast("Nama tidak boleh kosong!")
+                        return@setOnClickListener
                     }
 
-                    settingViewModel.updateUser(imageFile, edtName.text.toString(), user.id).observe(this@SettingActivity) { result ->
-                        if (result != null) {
+                    if (user.authType == "firebase") {
+                        val firebaseUser = Firebase.auth.currentUser
+
+                        if (firebaseUser != null) {
+                            val profileUpdates = UserProfileChangeRequest.Builder()
+                                .setDisplayName(name)
+                                .setPhotoUri(settingViewModel.currentImageUri)
+                                .build()
+
+                            firebaseUser.updateProfile(profileUpdates)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Log.d("Firebase Update", "User profile updated.")
+
+                                        val uri = settingViewModel.currentImageUri.toString()
+
+                                        // Simpan data ke sesi
+                                        settingViewModel.saveSession(
+                                            UserEntity(
+                                                id = user.id,
+                                                name = name,
+                                                email = user.email,
+                                                token = user.token,
+                                                isLogin = true,
+                                                photoUrl = uri,
+                                                expireToken = user.expireToken,
+                                                authType = user.authType
+                                            )
+                                        )
+                                        finish()
+                                    } else {
+                                        Log.e("Firebase Update", "Failed to update profile: ${task.exception}")
+                                        showToast("profile update failed")
+                                    }
+                                }
+                        } else {
+                            showToast("no user sign in")
+                        }
+                    } else {
+                        // Logika untuk backend Node.js
+                        val imageFile = settingViewModel.currentImageUri?.let { uri ->
+                            uriToFile(uri, this@SettingActivity).reduceFileImage()
+                        }
+
+                        settingViewModel.updateUserSetting(imageFile, name, user.id).observe(this@SettingActivity) { result ->
                             when (result) {
                                 is Result.Error -> {
                                     showToast(result.error)
@@ -95,24 +167,26 @@ class SettingActivity : AppCompatActivity() {
                                     val data = result.data
 
                                     settingViewModel.saveSession(
-                                        UserModel(
-                                            user.id,
-                                            data.user.name,
-                                            user.email,
-                                            user.token,
-                                            true,
-                                            data.user.photoUrl,
-                                            user.expireToken
+                                        UserEntity(
+                                            id = user.id,
+                                            name = data.user.name,
+                                            email = user.email,
+                                            token = user.token,
+                                            isLogin = true,
+                                            photoUrl = data.user.photoUrl,
+                                            expireToken = user.expireToken,
+                                            authType = user.authType
                                         )
                                     )
 
-                                    showToast(result.data.message)
+                                    showToast(data.message)
                                     finish()
                                 }
                             }
                         }
                     }
                 }
+
             }
         }
     }

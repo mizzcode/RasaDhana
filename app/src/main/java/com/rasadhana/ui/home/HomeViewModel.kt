@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.rasadhana.data.local.entity.RecipeEntity
-import com.rasadhana.data.pref.UserModel
+import com.rasadhana.data.local.entity.UserEntity
 import com.rasadhana.data.repository.RecipeRepository
 import com.rasadhana.data.repository.UserRepository
 import kotlinx.coroutines.launch
@@ -23,7 +23,7 @@ class HomeViewModel(private val userRepository: UserRepository, private val reci
         }
     }
 
-    fun getSession(): LiveData<UserModel> {
+    fun getSession(): LiveData<UserEntity> {
         return userRepository.getSession().asLiveData()
     }
 

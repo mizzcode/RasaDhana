@@ -8,7 +8,6 @@ import com.google.gson.Gson
 import com.rasadhana.data.Result
 import com.rasadhana.data.local.entity.UserEntity
 import com.rasadhana.data.local.room.UserDao
-import com.rasadhana.data.pref.UserModel
 import com.rasadhana.data.pref.UserPreference
 import com.rasadhana.data.remote.response.LoginResponse
 import com.rasadhana.data.remote.response.OtpResponse
@@ -16,7 +15,6 @@ import com.rasadhana.data.remote.response.RegisterResponse
 import com.rasadhana.data.remote.response.RegisterVerifyOtpResponse
 import com.rasadhana.data.remote.response.ResetPasswordResponse
 import com.rasadhana.data.remote.response.UpdateUserResponse
-import com.rasadhana.data.remote.response.UserDataResponse
 import com.rasadhana.data.remote.retrofit.ApiService
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MediaType.Companion.toMediaType
@@ -93,14 +91,18 @@ class UserRepository(private val apiService: ApiService, private val userPrefere
 
         try {
             val response = apiService.getUserData("Bearer $token")
+
             val data = response.data.let { data ->
                 UserEntity(
                     id = data.id,
                     name = data.name,
                     email = data.email,
                     password = data.password,
+                    isLogin = true,
                     photoUrl = data.photoUrl,
-                    expireToken = response.expireToken
+                    token = data.resetToken.toString(),
+                    expireToken = response.expireToken,
+                    authType = "nodejs"
                 )
             }
 
@@ -109,20 +111,14 @@ class UserRepository(private val apiService: ApiService, private val userPrefere
             val localData: LiveData<Result<UserEntity>> = userDao.getUserById(data.id).map { Result.Success(it) }
             emitSource(localData)
         } catch (e: HttpException) {
-            val errorBody = e.response()?.errorBody()?.string()
-            val errorMessage = try {
-                val errorResponse = Gson().fromJson(errorBody, UserDataResponse::class.java)
-                errorResponse.message
-            } catch (parsingException: Exception) {
-                "Oops! Something went wrong. Please try again later."
-            }
+            val errorMessage = "Oops! Something went wrong. Please try again later."
             emit(Result.Error(errorMessage))
         } catch (e: Exception) {
             emit(Result.Error("Please check your connection and try again."))
         }
     }
 
-    fun updateUser(imageFile: File?, name: String?, userId: String): LiveData<Result<UpdateUserResponse>> = liveData {
+    fun updateUserSetting(imageFile: File?, name: String?, userId: String): LiveData<Result<UpdateUserResponse>> = liveData {
         emit(Result.Loading)
 
         val requestBody = name?.toRequestBody("text/plain".toMediaType())
@@ -132,12 +128,11 @@ class UserRepository(private val apiService: ApiService, private val userPrefere
             MultipartBody.Part.createFormData("photo", it.name, requestImageFile)
         }
 
-        Log.d("file profile", multipartBody.toString())
-        imageFile?.let { Log.d("file profile", it.name) }
-
         try {
             val successResponse = apiService.updateUserData(multipartBody, requestBody, userId)
+
             emit(Result.Success(successResponse))
+
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
             val errorMessage = try {
@@ -192,11 +187,11 @@ class UserRepository(private val apiService: ApiService, private val userPrefere
         }
     }
 
-    suspend fun saveSession(user: UserModel) {
+    suspend fun saveSession(user: UserEntity) {
         userPreference.saveSession(user)
     }
 
-    fun getSession(): Flow<UserModel> {
+    fun getSession(): Flow<UserEntity> {
         return userPreference.getSession()
     }
 

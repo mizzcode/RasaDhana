@@ -1,36 +1,26 @@
 {
   "project_info": {
-    "project_number": "325502200731",
-    "project_id": "be-rasadhana",
-    "storage_bucket": "be-rasadhana.firebasestorage.app"
+    "project_number": "502059075242",
+    "project_id": "rasadhana-329d9",
+    "storage_bucket": "rasadhana-329d9.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:325502200731:android:a7cf46351044cb247fcf3e",
+        "mobilesdk_app_id": "1:502059075242:android:8031dea03591b5c10172d3",
         "android_client_info": {
-          "package_name": "RasaDhana.app"
+          "package_name": "com.rasadhana"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "325502200731-4t820fi3j91don8i4v58p1ofpume1pa6.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDX1gpOnqnOlNS7i-zF1NdbVcmQAIouYtw"
+          "current_key": "AIzaSyCFaIHU21JVgBAcAl9YEDprChjiq9BCpbg"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "325502200731-4t820fi3j91don8i4v58p1ofpume1pa6.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

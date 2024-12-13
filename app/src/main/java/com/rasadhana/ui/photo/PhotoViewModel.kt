@@ -5,7 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.rasadhana.data.pref.UserModel
+import com.rasadhana.data.local.entity.UserEntity
 import com.rasadhana.data.repository.RecipeRepository
 import com.rasadhana.data.repository.UploadRepository
 import com.rasadhana.data.repository.UserRepository
@@ -23,7 +23,7 @@ class PhotoViewModel(
 
     fun generateRecipe(userId: String, context: Context) = recipeRepository.generateRecipe(userId, context)
 
-    fun getSession(): LiveData<UserModel> {
+    fun getSession(): LiveData<UserEntity> {
         return userRepository.getSession().asLiveData()
     }
 }
